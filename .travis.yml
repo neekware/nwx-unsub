@@ -1,0 +1,27 @@
+
+sudo: false
+dist: trusty
+language: node_js
+node_js:
+  - "9"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+addons:
+  chrome: stable
+
+install:
+  - yarn
+
+before_script:
+  - "sudo chown root /opt/google/chrome/chrome-sandbox"
+  - "sudo chmod 4755 /opt/google/chrome/chrome-sandbox"
+
+script:
+  - yarn ci:all
+
+after_script:
+  - cat ./coverage/unsub/lcov.info | ./node_modules/coveralls/bin/coveralls.js
