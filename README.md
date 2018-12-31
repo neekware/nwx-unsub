@@ -27,7 +27,7 @@ To run the tests against the current environment:
 
 # License
 
-Released under a ([MIT](https://github.com/neekware/nwx-unsub/blob/master/LICENSE)) license.
+Released under a ([MIT](LICENSE)) license.
 
 # Version
 
