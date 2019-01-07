@@ -1,0 +1,88 @@
+{
+  "name": "@nwx/unsub",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neekware/nwx-unsub.git"
+  },
+  "keywords": [
+    "ng",
+    "angular",
+    "rxjs",
+    "subscription"
+  ],
+  "author": "Val Neekman",
+  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/neekware/nwx-unsub/issues"
+  },
+  "homepage": "https://github.com/neekware/nwx-unsub",
+  "scripts": {
+    "###----- Stating -----###": "Staging app commands",
+    "app:serve": "ng serve web",
+    "app:build": "ng build --prod web",
+    "app:test": "ng test web --watch=false",
+    "app:e2e": "ng e2e web-e2e",
+    "app:lint": "ng lint web",
+    "###----- Unsub Module -----###": "Unsub module commands",
+    "pkg:build": "ng build unsub --prod",
+    "pkg:test": "ng test unsub --watch=false",
+    "pkg:lint": "ng lint unsub",
+    "###----- CI -----###": "Continuous integration",
+    "app:test:ci": "ng test web --browsers ChromeHeadless --watch=false",
+    "app:e2e:ci":
+      "ng e2e web-e2e --port 5300 --protractor-config=apps/web/e2e/protractor.conf.ci.js",
+    "pkg:test:ci": "ng test unsub --browsers ChromeHeadless --watch=false --code-coverage",
+    "ci": "yarn pkg:lint && yarn pkg:test:ci",
+    "ci:all": "yarn ci && yarn app:lint && yarn app:test:ci && yarn app:e2e:ci",
+    "###----- Tools -----###": "Tool commands",
+    "format":
+      "node node_modules/.bin/prettier --single-quote --print-width 90 --write 'apps/**/src/*.{ts,css,scss,json}' 'pkgs/**/src/*.{ts,css,scss,json}'",
+    "release": "ts-node ./tools/release.ts -- "
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^6.0.0",
+    "@angular/common": "^6.0.0",
+    "@angular/compiler": "^6.0.0",
+    "@angular/core": "^6.0.0",
+    "@angular/forms": "^6.0.0",
+    "@angular/http": "^6.0.0",
+    "@angular/platform-browser": "^6.0.0",
+    "@angular/platform-browser-dynamic": "^6.0.0",
+    "@angular/router": "^6.0.0",
+    "core-js": "^2.5.4",
+    "rxjs": "^6.0.0",
+    "zone.js": "^0.8.26"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^0.6.1",
+    "@angular-devkit/build-ng-packagr": "~0.6.1",
+    "@angular/cli": "~6.0.0",
+    "@angular/compiler-cli": "^6.0.0",
+    "@angular/language-service": "^6.0.0",
+    "@types/jasmine": "~2.8.6",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
+    "codelyzer": "~4.2.1",
+    "commander": "^2.15.1",
+    "coveralls": "^3.0.1",
+    "jasmine-core": "~2.99.1",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "~1.7.1",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "~1.4.2",
+    "karma-jasmine": "~1.1.1",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^3.0.0-rc.2",
+    "prettier": "^1.12.1",
+    "protractor": "~5.3.0",
+    "semver": "^5.5.0",
+    "ts-node": "~5.0.1",
+    "tsickle": ">=0.25.5",
+    "tslib": "^1.7.1",
+    "tslint": "~5.9.1",
+    "typescript": "~2.7.2"
+  }
+}
