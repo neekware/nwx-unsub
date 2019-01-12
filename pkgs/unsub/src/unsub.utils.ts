@@ -6,9 +6,9 @@
  * found in the LICENSE file at http://neekware.com/license/MIT.html
  */
 
-import { UnsubscribableOptions } from './unsub.types';
-
-export const DefaultUnsubscribableOptions: UnsubscribableOptions = {
-  includes: [],
-  excludes: []
-};
+/**
+ * @returns {boolean} true of func is a function else false
+ */
+export function isFunction(func: any) {
+  return typeof func === 'function';
+}

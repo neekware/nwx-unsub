@@ -13,8 +13,7 @@ import { UnsubModule } from './unsub.module';
 /**
  * An injectable class that handles the unsubscribing service
  */
-@Injectable({
-})
+@Injectable()
 export class UnsubService {
 
   /**
