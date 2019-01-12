@@ -22,33 +22,33 @@ export const Unsubscribable = <TFunction extends Function>(
       );
     }
 
-    const onDestroy = target.prototype.ngOnDestroy;
     target.prototype['destroy$'] = new Subject();
+    const onDestroy = target.prototype.ngOnDestroy;
+
     target.prototype.ngOnDestroy = () => {
       target.prototype['destroy$'].next();
       target.prototype['destroy$'].complete();
-      onDestroy.apply(this);
-    };
-
-    if (options.includes.length > 0) {
-      options.includes.forEach(prop => {
-        const unsubscribe =
-          (target.prototype[prop] || undefined).unsubscribe || undefined;
-        if (!unsubscribe || !isFunction(unsubscribe)) {
-          console.warn(`${target.name} has no unsubscribable property called ${prop}`);
-        } else {
-          unsubscribe();
-        }
-      });
-    } else if (options.excludes.length > 0) {
-      for (let prop in target.prototype) {
-        if (target.prototype.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
-          const unsubscribe = target.prototype[prop].unsubscribe || undefined;
-          if (unsubscribe || isFunction(unsubscribe)) {
+      if (options.includes.length > 0) {
+        options.includes.forEach(prop => {
+          const unsubscribe =
+            (target.prototype[prop] || undefined).unsubscribe || undefined;
+          if (!unsubscribe || !isFunction(unsubscribe)) {
+            console.warn(`${target.name} has no unsubscribable property called ${prop}`);
+          } else {
             unsubscribe();
+          }
+        });
+      } else if (options.excludes.length > 0) {
+        for (let prop in target.prototype) {
+          if (target.prototype.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
+            const unsubscribe = target.prototype[prop].unsubscribe || undefined;
+            if (unsubscribe || isFunction(unsubscribe)) {
+              unsubscribe();
+            }
           }
         }
       }
-    }
+      onDestroy.apply(this);
+    };
   };
 };
