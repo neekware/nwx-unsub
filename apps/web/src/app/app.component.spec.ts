@@ -7,11 +7,6 @@ import { UnsubModule } from 'pkgs/unsub';
 
 import { AppComponent } from './app.component';
 
-const AppEnv: AppCfg = {
-  appName: '@nwx/unsub',
-  production: false
-};
-
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
