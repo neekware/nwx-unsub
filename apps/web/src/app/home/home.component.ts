@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { Unsubscribable } from 'pkgs/unsub';
-import { interval } from 'rxjs';
+import { interval, Subscription, Subject } from 'rxjs';
 import { tap, map, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -9,11 +9,13 @@ import { tap, map, takeUntil } from 'rxjs/operators';
   templateUrl: './home.component.html'
 })
 @Unsubscribable({
-  includes: ['customSub']
+  // includes: ['customSub$']
 })
 export class HomeComponent implements OnDestroy {
   title = 'Neekware';
   customSub$ = null;
+  destroy$ = new Subject();
+
   constructor() {
     console.log(`HomeComponent: loaded ...`);
     this.title = '@nwx/unsub';

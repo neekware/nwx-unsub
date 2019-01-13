@@ -12,9 +12,10 @@ import { UnsubscribableOptions } from './unsub.types';
 import { DefaultUnsubscribableOptions } from './unsub.defaults';
 
 export const Unsubscribable = <TFunction extends Function>(
-  options: UnsubscribableOptions = DefaultUnsubscribableOptions
+  options?: UnsubscribableOptions
 ) => {
   return (target: TFunction) => {
+    options = { ...DefaultUnsubscribableOptions, ...options };
     const ngOnDestroy = target.prototype.ngOnDestroy || undefined;
     if (!ngOnDestroy || !isFunction(ngOnDestroy)) {
       throw Error(
@@ -22,12 +23,14 @@ export const Unsubscribable = <TFunction extends Function>(
       );
     }
 
-    target.prototype['destroy$'] = new Subject();
+    if (!target.prototype.hasOwnProperty('destroy$')) {
+      Object.assign(target.prototype, { destroy$: new Subject() });
+    }
     const onDestroy = target.prototype.ngOnDestroy;
 
     target.prototype.ngOnDestroy = () => {
-      target.prototype['destroy$'].next();
-      target.prototype['destroy$'].complete();
+      target.prototype.destroy$.next();
+      target.prototype.destroy$.complete();
       if (options.includes.length > 0) {
         options.includes.forEach(prop => {
           const unsubscribe =
