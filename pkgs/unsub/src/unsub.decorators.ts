@@ -17,6 +17,13 @@ export const Unsubscribable = (options?: UnsubscribableOptions) => {
     return class extends target implements OnDestroy {
       constructor(...args) {
         super(args);
+        if (!this.hasOwnProperty(options.takeUntilSubscription)) {
+          throw Error(
+            `${target.name} must implement "${
+              options.takeUntilSubscription
+            } = Subject<Boolean> = new Subject<Boolean>();" if decorated with @Unsubscribable`
+          );
+        }
       }
 
       ngOnDestroy() {
