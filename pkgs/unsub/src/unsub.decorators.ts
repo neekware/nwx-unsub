@@ -6,52 +6,66 @@
  * found in the LICENSE file at http://neekware.com/license/MIT.html
  */
 
-import { Subject } from 'rxjs';
 import { isFunction } from 'util';
 import { UnsubscribableOptions } from './unsub.types';
 import { DefaultUnsubscribableOptions } from './unsub.defaults';
+import { OnDestroy } from '@angular/core';
 
-export const Unsubscribable = <TFunction extends Function>(
-  options?: UnsubscribableOptions
-) => {
-  return (target: TFunction) => {
+export const Unsubscribable = (options?: UnsubscribableOptions) => {
+  return <T extends { new (...args: any[]): any }>(target: T) => {
     options = { ...DefaultUnsubscribableOptions, ...options };
-    const ngOnDestroy = target.prototype.ngOnDestroy || undefined;
-    if (!ngOnDestroy || !isFunction(ngOnDestroy)) {
-      throw Error(
-        `${target.name} must implement OnDestroy if decorated with @Unsubscribable`
-      );
-    }
+    return class extends target implements OnDestroy {
+      constructor(...args) {
+        super(args);
+      }
 
-    if (!target.prototype.hasOwnProperty('destroy$')) {
-      Object.assign(target.prototype, { destroy$: new Subject() });
-    }
-    const onDestroy = target.prototype.ngOnDestroy;
+      ngOnDestroy() {
+        this.processTakeUntils();
+        if (options.includes.length > 0) {
+          this.processIncludes();
+        } else {
+          this.processExcludes();
+        }
+        try {
+          super.ngOnDestroy(this);
+        } catch (e) {
+          throw Error(
+            `${target.name} must implement OnDestroy if decorated with @Unsubscribable`
+          );
+        }
+      }
 
-    target.prototype.ngOnDestroy = () => {
-      target.prototype.destroy$.next();
-      target.prototype.destroy$.complete();
-      if (options.includes.length > 0) {
+      private processTakeUntils() {
+        if (this.hasOwnProperty(options.takeUntilSubscription)) {
+          this.destroy$.next(true);
+          this.destroy$.complete();
+        }
+      }
+
+      private processIncludes() {
         options.includes.forEach(prop => {
-          const unsubscribe =
-            (target.prototype[prop] || undefined).unsubscribe || undefined;
-          if (!unsubscribe || !isFunction(unsubscribe)) {
-            console.warn(`${target.name} has no unsubscribable property called ${prop}`);
+          if (this.hasOwnProperty(prop)) {
+            const subscription = this[prop];
+            if (isFunction(subscription.unsubscribe)) {
+              subscription.unsubscribe();
+            }
           } else {
-            unsubscribe();
+            console.warn(`${target.name} has no unsubscribable property called ${prop}`);
           }
         });
-      } else if (options.excludes.length > 0) {
-        for (const prop in target.prototype) {
-          if (target.prototype.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
-            const unsubscribe = target.prototype[prop].unsubscribe || undefined;
-            if (unsubscribe || isFunction(unsubscribe)) {
-              unsubscribe();
+      }
+
+      private processExcludes() {
+        options.excludes.push(options.takeUntilSubscription);
+        for (const prop in this) {
+          if (this.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
+            const subscription = this[prop];
+            if (isFunction(subscription.unsubscribe)) {
+              subscription.unsubscribe();
             }
           }
         }
       }
-      onDestroy.apply(this);
     };
   };
 };

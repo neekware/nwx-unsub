@@ -11,6 +11,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, MonoTypeOperatorFunction, Subscription } from 'rxjs';
 import { UnsubModule } from './unsub.module';
 import { takeUntil, subscribeOn } from 'rxjs/operators';
+import { isFunction } from 'util';
 
 /**
  * An injectable class that handles the unsubscribing service
@@ -38,10 +39,9 @@ export class UnsubService implements OnDestroy {
     this.destroy$.next(true);
     this.destroy$.complete();
 
-    this.subscriptions.forEach(sub => {
-      if (sub && sub.unsubscribe) {
-        sub.unsubscribe();
-        sub.unsubscribe = undefined;
+    this.subscriptions.forEach(subscription => {
+      if (isFunction(subscription.unsubscribe)) {
+        subscription.unsubscribe();
       }
     });
   }

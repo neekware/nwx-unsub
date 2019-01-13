@@ -7,6 +7,7 @@
  */
 
 export interface UnsubscribableOptions {
+  takeUntilSubscription?: string;
   includes?: string[];
   excludes?: string[];
 }
