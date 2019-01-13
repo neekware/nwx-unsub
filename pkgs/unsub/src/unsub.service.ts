@@ -17,7 +17,7 @@ import { takeUntil, subscribeOn } from 'rxjs/operators';
  */
 @Injectable()
 export class UnsubService implements OnDestroy {
-  destroy$: Subject<Boolean> = new Subject();
+  destroy$: Subject<Boolean> = new Subject<Boolean>();
   subscriptions: Subscription[] = [];
 
   constructor() {}
