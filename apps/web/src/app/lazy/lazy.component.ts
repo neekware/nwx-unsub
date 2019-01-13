@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Unsubscribable, UnsubService } from 'pkgs/unsub';
+import { UnsubService } from 'pkgs/unsub';
 
 @Component({
   selector: 'app-lazy',

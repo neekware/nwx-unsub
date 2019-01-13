@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { Unsubscribable, UnsubService } from 'pkgs/unsub';
-import { interval, Subscription, Subject } from 'rxjs';
-import { tap, map, takeUntil } from 'rxjs/operators';
+import { UnsubService } from 'pkgs/unsub';
+import { interval } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
