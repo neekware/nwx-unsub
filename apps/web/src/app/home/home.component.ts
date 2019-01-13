@@ -1,22 +1,18 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { Unsubscribable } from 'pkgs/unsub';
+import { Unsubscribable, UnsubService } from 'pkgs/unsub';
 import { interval, Subscription, Subject } from 'rxjs';
 import { tap, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
+  providers: [UnsubService],
   templateUrl: './home.component.html'
 })
-@Unsubscribable({
-  // includes: ['customSub$']
-})
-export class HomeComponent implements OnDestroy {
+export class HomeComponent {
   title = 'Neekware';
   customSub$ = null;
-  destroy$ = new Subject();
-
-  constructor() {
+  constructor(private unsub: UnsubService) {
     console.log(`HomeComponent: loaded ...`);
     this.title = '@nwx/unsub';
     this.customSub$ = interval(1000)
@@ -24,11 +20,9 @@ export class HomeComponent implements OnDestroy {
       .subscribe();
 
     interval(1000)
-      .pipe(takeUntil(this.destroy$), tap(num => console.log(`takeUntil - ${num}`)))
+      .pipe(this.unsub.untilDestroy(), tap(num => console.log(`takeUntil - ${num}`)))
       .subscribe();
-  }
 
-  ngOnDestroy() {
-    console.log(`HomeComponent: destroyed ...`);
+    this.unsub.watch([this.customSub$]);
   }
 }

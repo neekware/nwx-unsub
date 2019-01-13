@@ -1,14 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Unsubscribable } from 'pkgs/unsub';
+import { Unsubscribable, UnsubService } from 'pkgs/unsub';
 
 @Component({
   selector: 'app-lazy',
+  providers: [UnsubService],
   templateUrl: './lazy.component.html'
 })
-@Unsubscribable()
 export class LazyComponent implements OnDestroy {
   title = 'Neekware Lazy';
-  constructor() {
+  constructor(private unsub: UnsubService) {
     this.title = '@nwx/unsub (lazy)';
     console.log('LazyComponent loaded ...');
   }
