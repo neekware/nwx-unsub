@@ -14,7 +14,7 @@ import { UnsubService } from '../src/unsub.service';
 describe('UnsubService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ UnsubModule]
+      imports: [UnsubModule]
     });
   });
 

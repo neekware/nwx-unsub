@@ -42,7 +42,7 @@ export const Unsubscribable = <TFunction extends Function>(
           }
         });
       } else if (options.excludes.length > 0) {
-        for (let prop in target.prototype) {
+        for (const prop in target.prototype) {
           if (target.prototype.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
             const unsubscribe = target.prototype[prop].unsubscribe || undefined;
             if (unsubscribe || isFunction(unsubscribe)) {

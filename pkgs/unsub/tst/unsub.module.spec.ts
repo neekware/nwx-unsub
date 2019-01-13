@@ -9,13 +9,13 @@
 import { UnsubModule } from '../src/unsub.module';
 
 describe('UnsubModule', () => {
-  let UnsubModule: UnsubModule;
+  let unsubModule: UnsubModule;
 
   beforeEach(() => {
-    UnsubModule = new UnsubModule();
+    unsubModule = new UnsubModule();
   });
 
   it('should create an instance', () => {
-    expect(UnsubModule).toBeTruthy();
+    expect(unsubModule).toBeTruthy();
   });
 });
