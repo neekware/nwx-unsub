@@ -34,11 +34,9 @@ export const Unsubscribable = (options?: UnsubscribableOptions) => {
           this.processExcludes();
         }
         try {
-          super.ngOnDestroy(this);
+          super.ngOnDestroy();
         } catch (e) {
-          throw Error(
-            `${target.name} must implement OnDestroy if decorated with @Unsubscribable`
-          );
+          // ngOnDestroy is optional for super as wel do the clean up.
         }
       }
 
