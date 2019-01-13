@@ -7,7 +7,10 @@
  */
 
 export interface UnsubscribableOptions {
+  // name of subscription property consumed by takeUnit (e.g. destroy$)
   takeUntilSubscription?: string;
+  // name of subscriptions automatically canceled on destroy
   includes?: string[];
+  // name of subscriptions excluded from automatical canceling
   excludes?: string[];
 }

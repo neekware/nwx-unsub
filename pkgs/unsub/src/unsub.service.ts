@@ -23,6 +23,9 @@ export class UnsubService implements OnDestroy {
 
   constructor() {}
 
+  /**
+   * registers subscription functions for auto cancelation
+   */
   watch(subscriptions: Subscription | Subscription[]) {
     if (Array.isArray(subscriptions)) {
       this.subscriptions = [...this.subscriptions, ...subscriptions];
@@ -31,10 +34,16 @@ export class UnsubService implements OnDestroy {
     }
   }
 
+  /**
+   * @returns an operator function consumable to .pipe()
+   */
   untilDestroy() {
     return takeUntil(this.destroy$);
   }
 
+  /**
+   * cancels all subscriptions on destroy
+   */
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.complete();
