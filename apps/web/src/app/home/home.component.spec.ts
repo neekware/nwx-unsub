@@ -5,35 +5,30 @@ import { Observable, of as observableOf } from 'rxjs';
 
 import { UnsubModule } from 'pkgs/unsub';
 
-import { AppComponent } from './app.component';
+import { HomeComponent } from './home.component';
 
-const AppEnv: AppCfg = {
-  appName: '@nwx/unsub',
-  production: false
-};
-
-describe('AppComponent', () => {
+describe('HomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [BrowserModule, UnsubModule],
-      declarations: [AppComponent]
+      declarations: [HomeComponent]
     }).compileComponents();
   }));
 
   it('should create the @nwx/unsub', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(HomeComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
 
   it(`should have as title '@nwx/unsub'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(HomeComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('@nwx/unsub');
   }));
 
   it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain('Welcome to @nwx/unsub!');

@@ -1,17 +1,25 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { CfgModule } from '@nwx/cfg';
-import { LogModule } from '@nwx/logger';
+import { Routes, RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
+import { HomeComponent } from './home/home.component';
 
-import { UnsubModule } from 'pkgs/unsub';
+export const appRoutes: Routes = [
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'lazy',
+    loadChildren: './lazy/lazy.module#LazyModule'
+  }
+];
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, CfgModule.forRoot(environment), LogModule, UnsubModule],
+  declarations: [AppComponent, HomeComponent],
+  imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

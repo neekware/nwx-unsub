@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
 
-import { UnsubService } from 'pkgs/unsub';
-
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
-  title = 'Neekware';
-  options = {};
   constructor() {
-    this.title = '@nwx/unsub';
+    console.log('AppComponent loaded ...');
   }
 }
