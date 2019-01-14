@@ -10,7 +10,7 @@ import { tap, takeUntil } from 'rxjs/operators';
   templateUrl: './home.component.html'
 })
 @Unsubscribable({
-  takeUntilSubscription: 'destroy$'
+  takeUntilInputName: 'destroy$'
 })
 export class HomeComponent implements OnDestroy {
   title = 'Neekware';

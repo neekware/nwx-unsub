@@ -9,7 +9,7 @@
 import { UnsubscribableOptions } from './unsub.types';
 
 export const DefaultUnsubscribableOptions: UnsubscribableOptions = {
-  takeUntilSubscription: 'destroy$',
+  takeUntilInputName: 'destroy$',
   includes: [],
   excludes: []
 };

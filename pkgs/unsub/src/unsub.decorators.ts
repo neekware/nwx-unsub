@@ -6,21 +6,25 @@
  * found in the LICENSE file at http://neekware.com/license/MIT.html
  */
 
+import { OnDestroy } from '@angular/core';
+
 import { isFunction } from 'util';
 import { UnsubscribableOptions } from './unsub.types';
 import { DefaultUnsubscribableOptions } from './unsub.defaults';
-import { OnDestroy } from '@angular/core';
 
-export const Unsubscribable = (options?: UnsubscribableOptions) => {
+/**
+ * Unsubscribable decorator - streamline cancelling of subscriptions
+ */
+export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
+  options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
-    options = { ...DefaultUnsubscribableOptions, ...options };
     return class extends target implements OnDestroy {
       constructor(...args) {
         super(args);
-        if (!this.hasOwnProperty(options.takeUntilSubscription)) {
+        if (!this.hasOwnProperty(options.takeUntilInputName)) {
           throw Error(
             `${target.name} must implement "${
-              options.takeUntilSubscription
+              options.takeUntilInputName
             } = Subject<Boolean> = new Subject<Boolean>();" if decorated with @Unsubscribable`
           );
         }
@@ -33,17 +37,15 @@ export const Unsubscribable = (options?: UnsubscribableOptions) => {
         } else {
           this.processExcludes();
         }
-        try {
+        if (isFunction(super.ngOnDestroy)) {
           super.ngOnDestroy();
-        } catch (e) {
-          // ngOnDestroy is optional for super as wel do the clean up.
         }
       }
 
       private processTakeUntils() {
-        if (this.hasOwnProperty(options.takeUntilSubscription)) {
-          this.destroy$.next(true);
-          this.destroy$.complete();
+        if (this.hasOwnProperty(options.takeUntilInputName)) {
+          this[options.takeUntilInputName].next(true);
+          this[options.takeUntilInputName].complete();
         }
       }
 
@@ -61,7 +63,7 @@ export const Unsubscribable = (options?: UnsubscribableOptions) => {
       }
 
       private processExcludes() {
-        options.excludes.push(options.takeUntilSubscription);
+        options.excludes.push(options.takeUntilInputName);
         for (const prop in this) {
           if (this.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
             const subscription = this[prop];
