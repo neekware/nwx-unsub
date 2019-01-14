@@ -79,7 +79,7 @@ export class HomeComponent {
 
 To run the tests against the current environment:
 
-    npm run ci:all
+    npm run ci
 
 # License
 
