@@ -10,4 +10,3 @@ export { UnsubscribableOptions } from './src/unsub.types';
 export { DefaultUnsubscribableOptions } from './src/unsub.defaults';
 export { Unsubscribable } from './src/unsub.decorators';
 export { UnsubService } from './src/unsub.service';
-export { UnsubModule } from './src/unsub.module';

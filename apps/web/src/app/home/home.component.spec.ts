@@ -3,14 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { Observable, of as observableOf } from 'rxjs';
 
-import { UnsubModule } from 'pkgs/unsub';
-
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserModule, UnsubModule],
+      imports: [BrowserModule],
       declarations: [HomeComponent]
     }).compileComponents();
   }));

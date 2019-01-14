@@ -9,10 +9,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
 import { isFunction } from 'util';
-import { Subject, MonoTypeOperatorFunction, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
-import { UnsubModule } from './unsub.module';
-import { takeUntil, subscribeOn } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * An injectable service class that handles cancelation of subscriptions
