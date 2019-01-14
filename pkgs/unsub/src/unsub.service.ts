@@ -11,8 +11,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { isFunction } from 'util';
 import { Subject, Subscription } from 'rxjs';
 
-import { takeUntil } from 'rxjs/operators';
-
 /**
  * An injectable service class that handles cancelation of subscriptions
  */
@@ -30,13 +28,6 @@ export class UnsubService implements OnDestroy {
     } else {
       this.subscriptions.push(subscriptions);
     }
-  }
-
-  /**
-   * @returns an operator function consumable within .pipe()
-   */
-  untilDestroy() {
-    return takeUntil(this.destroy$);
   }
 
   /**

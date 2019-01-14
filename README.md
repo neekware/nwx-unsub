@@ -18,7 +18,7 @@
 ```typescript
 // in your component
 import { Component } from '@angular/core';
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UnsubService } from '@nwx/unsub';
 
@@ -28,7 +28,7 @@ import { UnsubService } from '@nwx/unsub';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-  customSub$ = null;
+  customSub$ = Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
   constructor(private unsub: UnsubService) {
@@ -47,7 +47,7 @@ export class HomeComponent {
 ```typescript
 // in your component
 import { Component } from '@angular/core';
-import { interval, Subject } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unsubscribable } from '@nwx/unsub';
 
@@ -59,10 +59,10 @@ import { Unsubscribable } from '@nwx/unsub';
 @Unsubscribable({
   takeUntilInputName: 'destroy$', // property used by takeUntil()
   includes: ['customSub$'], // subscription names to be auto canceled
-  excludes: [], // subscription names not to be auto canceled
+  excludes: [] // subscription names not to be auto canceled
 })
 export class HomeComponent {
-  customSub$ = null;
+  customSub$ = Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
   constructor(private unsub: UnsubService) {

@@ -42,14 +42,14 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
         }
       }
 
-      private processTakeUntils() {
+      processTakeUntils() {
         if (this.hasOwnProperty(options.takeUntilInputName)) {
           this[options.takeUntilInputName].next(true);
           this[options.takeUntilInputName].complete();
         }
       }
 
-      private processIncludes() {
+      processIncludes() {
         options.includes.forEach(prop => {
           if (this.hasOwnProperty(prop)) {
             const subscription = this[prop];
@@ -62,10 +62,10 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
         });
       }
 
-      private processExcludes() {
+      processExcludes() {
         options.excludes.push(options.takeUntilInputName);
         for (const prop in this) {
-          if (this.hasOwnProperty(prop) && !options.excludes.includes(prop)) {
+          if (this.hasOwnProperty(prop) && options.excludes.indexOf(prop) <= -1) {
             const subscription = this[prop];
             if (isFunction(subscription.unsubscribe)) {
               subscription.unsubscribe();
