@@ -1,6 +1,6 @@
 # @nwx/unsub
 
-**A simple subscription clean up module for Angular applications**
+**A simple subscription clean library for Angular applications**
 
 [![status-image]][status-link]
 [![version-image]][version-link]
@@ -13,10 +13,66 @@
 
 # How to use
 
+**Auto Cancelling Subscription Service**
+
 ```typescript
-import { Unsubscriber } from '@nwx/unsub';
+// in your component
+import { Component } from '@angular/core';
+import { interval } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { UnsubService } from '@nwx/unsub';
 
+@Component({
+  selector: 'home',
+  providers: [UnsubService],
+  templateUrl: './home.component.html'
+})
+export class HomeComponent {
+  customSub$ = null;
+  destroy$: Subject<Boolean> = new Subject<Boolean>();
 
+  constructor(private unsub: UnsubService) {
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+    this.unsub.autoCancel(this.customSub$);
+
+    interval(3000)
+      .pipe(takeUntil(this.unsub.untilDestroy()))
+      .subscribe(num => console.log(`takeUntil - ${num}`));
+  }
+}
+```
+
+**Auto Cancelling Subscription Decorator**
+
+```typescript
+// in your component
+import { Component } from '@angular/core';
+import { interval, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscribable } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  providers: [UnsubService],
+  templateUrl: './home.component.html'
+})
+@Unsubscribable({
+  takeUntilInputName: 'destroy$', // property used by takeUntil()
+  includes: ['customSub$'], // subscription names to be auto canceled
+  excludes: [], // subscription names not to be auto canceled
+})
+export class HomeComponent {
+  customSub$ = null;
+  destroy$: Subject<Boolean> = new Subject<Boolean>();
+
+  constructor(private unsub: UnsubService) {
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+
+    interval(3000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(num => console.log(`takeUntil - ${num}`));
+  }
+}
 ```
 
 # Running the tests
@@ -46,8 +102,6 @@ X.Y.Z Version
 [download-image]: https://img.shields.io/npm/dm/@nwx/unsub.svg
 [download-link]: https://www.npmjs.com/package/@nwx/unsub
 
-
-Sponsors
-====================
+# Sponsors
 
 [![Surge](https://www.surgeforward.com/wp-content/themes/understrap-master/images/logo.png)](https://github.com/surgeforward)
