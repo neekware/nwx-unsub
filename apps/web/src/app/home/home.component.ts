@@ -42,6 +42,6 @@ export class HomeComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('HomeComponent ngOnDestroy called.');
+    console.log('HomeComponent ngOnDestroy ...');
   }
 }
