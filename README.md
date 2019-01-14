@@ -28,7 +28,7 @@ import { UnsubService } from '@nwx/unsub';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-  customSub$ = Subscription;
+  customSub$: Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
   constructor(private unsub: UnsubService) {
@@ -62,7 +62,7 @@ import { Unsubscribable } from '@nwx/unsub';
   excludes: [] // subscription names not to be auto canceled
 })
 export class HomeComponent {
-  customSub$ = Subscription;
+  customSub$: Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
   constructor(private unsub: UnsubService) {
