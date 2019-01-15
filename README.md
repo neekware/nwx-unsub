@@ -13,7 +13,7 @@
 
 # How to use
 
-**Auto Cancelling Subscription via UnsubService**
+**Auto Canceling Subscription via UnsubService**
 
 ```typescript
 // in your component
@@ -66,7 +66,7 @@ export class HomeComponent { // no need to implement OnDestroy, unless needed fo
 
 # Advanced Usage
 
-**Auto Cancelling Subscription Decorator (w/ takeUntil)**
+**Auto Canceling Subscription Decorator (w/ takeUntil)**
 
 ```typescript
 // in your component
