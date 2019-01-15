@@ -12,7 +12,7 @@ import { isFunction } from 'util';
 import { Subject, Subscription } from 'rxjs';
 
 /**
- * An injectable service class that handles cancelation of subscriptions
+ * An injectable service class that handles cancellation of subscriptions
  */
 @Injectable()
 export class UnsubService implements OnDestroy {
@@ -20,7 +20,7 @@ export class UnsubService implements OnDestroy {
   subscriptions: Subscription[] = [];
 
   /**
-   * Handles auto cancelation of given subscriptions
+   * Handles auto cancellation of given subscriptions
    */
   autoCancel(subscriptions: Subscription | Subscription[]) {
     if (Array.isArray(subscriptions)) {

@@ -13,7 +13,7 @@ import { UnsubscribableOptions } from './unsub.types';
 import { DefaultUnsubscribableOptions } from './unsub.defaults';
 
 /**
- * Unsubscribable decorator - streamline cancelling of subscriptions
+ * Unsubscribable decorator - streamline canceling of subscriptions
  */
 export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
   options = { ...DefaultUnsubscribableOptions, ...options };
