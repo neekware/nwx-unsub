@@ -72,7 +72,7 @@ export class HomeComponent { // no need to implement OnDestroy, unless needed fo
 
 # Advanced Usage
 
-**Auto Cancelling Subscription Decorator (w/ custom destroy subscription) **
+**Auto Cancelling Subscription Decorator (w/ custom destroy subscription)**
 
 ```typescript
 // in your component
