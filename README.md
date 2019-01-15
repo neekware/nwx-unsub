@@ -32,7 +32,7 @@ export class HomeComponent { // no need to implement OnDestroy, unless needed fo
 
   constructor(private unsub: UnsubService) {
     this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
-    this.unsub.autoCancel(this.customSub$); // we want this to be automatically clean up
+    this.unsub.autoCancel(this.customSub$); // we want this to be automatically cleaned up
 
     interval(3000)
       .pipe(takeUntil(this.unsub.destroy$) // this will be automatically completed and cleaned up
@@ -141,7 +141,7 @@ import { Unsubscribable } from '@nwx/unsub';
   excludes: ['notOurSub$'] // subscription names not to be auto canceled
 })
 export class HomeComponent {
-  @Input() notOurSub$: Subscription; // this will not be canceled by decorated class, everything else will be automatically
+  @Input() notOurSub$: Subscription; // this will not be canceled by decorated class, everything else will be auto canceled
   customSub$: Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
