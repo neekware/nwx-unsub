@@ -21,7 +21,10 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
     return class extends target implements OnDestroy {
       constructor(...args) {
         super(args);
-        if (!this.hasOwnProperty(options.takeUntilInputName)) {
+        if (
+          options.takeUntilInputName &&
+          !this.hasOwnProperty(options.takeUntilInputName)
+        ) {
           throw Error(
             `${target.name} must implement "${
               options.takeUntilInputName

@@ -83,6 +83,8 @@ import { Unsubscribable } from '@nwx/unsub';
   takeUntilInputName: 'destory$', // property used by takeUntil() - destroy$ or any custom name
 })
 export class HomeComponent {
+  destroy$: Subject<Boolean> = new Subject<Boolean>(); // destroy$ or any custom name
+
   constructor() {
     interval(3000)
       .pipe(takeUntil(this.destory$)) // decorated class will auto complete and clean this up
