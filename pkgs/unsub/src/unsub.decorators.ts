@@ -19,7 +19,7 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
   options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
     return class extends target implements OnDestroy {
-      constructor(...args) {
+      constructor(...args: any[]) {
         super(args);
         if (
           options.takeUntilInputName &&
