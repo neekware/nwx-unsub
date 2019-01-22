@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UnsubService } from 'pkgs/unsub';
 import { interval, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UnsubService } from 'pkgs/unsub';
 
 @Component({
   selector: 'app-lazy',

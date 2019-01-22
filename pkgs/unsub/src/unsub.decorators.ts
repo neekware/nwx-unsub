@@ -19,8 +19,11 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
   options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
     return class extends target implements OnDestroy {
-      constructor(...args: any[]) {
-        super(...arguments as any);
+      /**
+       * Validate the provided options
+       * Ensure the subject property name matches the `takeUntilInputName` provided.
+       */
+      validateOptions() {
         if (
           options.takeUntilInputName &&
           !this.hasOwnProperty(options.takeUntilInputName)
@@ -33,18 +36,25 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
         }
       }
 
+      /**
+       * Cancel all subscriptions on destroy
+       */
       ngOnDestroy() {
+        this.validateOptions();
         this.processTakeUntils();
         if (options.includes.length > 0) {
           this.processIncludes();
         } else {
           this.processExcludes();
         }
-        if (isFunction(super.ngOnDestroy)) {
+        if (super.ngOnDestroy && isFunction(super.ngOnDestroy)) {
           super.ngOnDestroy();
         }
       }
 
+      /**
+       * Cancel all subscriptions that use takeUntil
+       */
       processTakeUntils() {
         if (this.hasOwnProperty(options.takeUntilInputName)) {
           this[options.takeUntilInputName].next(true);
@@ -52,11 +62,18 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
         }
       }
 
+      /**
+       * Cancel all subscriptions that are explicitly specified
+       */
       processIncludes() {
         options.includes.forEach(prop => {
           if (this.hasOwnProperty(prop)) {
             const subscription = this[prop];
-            if (isFunction(subscription.unsubscribe)) {
+            if (
+              subscription &&
+              subscription.unsubscribe &&
+              isFunction(subscription.unsubscribe)
+            ) {
               subscription.unsubscribe();
             }
           } else {
@@ -65,12 +82,19 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
         });
       }
 
+      /**
+       * Cancel all subscriptions except those that are explicitly specified
+       */
       processExcludes() {
         options.excludes.push(options.takeUntilInputName);
         for (const prop in this) {
           if (this.hasOwnProperty(prop) && options.excludes.indexOf(prop) <= -1) {
             const subscription = this[prop];
-            if (isFunction(subscription.unsubscribe)) {
+            if (
+              subscription &&
+              subscription.unsubscribe &&
+              isFunction(subscription.unsubscribe)
+            ) {
               subscription.unsubscribe();
             }
           }

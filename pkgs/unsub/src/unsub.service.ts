@@ -12,7 +12,7 @@ import { isFunction } from 'util';
 import { Subject, Subscription } from 'rxjs';
 
 /**
- * An injectable service class that handles cancellation of subscriptions
+ * An injectable service class that handles auto cancellation of subscriptions
  */
 @Injectable()
 export class UnsubService implements OnDestroy {
@@ -20,7 +20,7 @@ export class UnsubService implements OnDestroy {
   subscriptions: Subscription[] = [];
 
   /**
-   * Handles auto cancellation of given subscriptions
+   * Registers all subscriptions that need auto cancellation on destroy
    */
   autoCancel(subscriptions: Subscription | Subscription[]) {
     if (Array.isArray(subscriptions)) {
@@ -31,14 +31,18 @@ export class UnsubService implements OnDestroy {
   }
 
   /**
-   * Handles automatically cancelling all subscriptions on destroy
+   * Handles auto cancellation of all subscriptions on destroy
    */
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.complete();
 
     this.subscriptions.forEach(subscription => {
-      if (isFunction(subscription.unsubscribe)) {
+      if (
+        subscription &&
+        subscription.unsubscribe &&
+        isFunction(subscription.unsubscribe)
+      ) {
         subscription.unsubscribe();
       }
     });
