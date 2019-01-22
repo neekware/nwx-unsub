@@ -8,25 +8,21 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Subject, MonoTypeOperatorFunction, Subscription } from 'rxjs';
-import { UnsubModule } from './unsub.module';
-import { takeUntil, subscribeOn } from 'rxjs/operators';
 import { isFunction } from 'util';
+import { Subject, Subscription } from 'rxjs';
 
 /**
- * An injectable class that handles the unsubscribing service
+ * An injectable service class that handles cancellation of subscriptions
  */
 @Injectable()
 export class UnsubService implements OnDestroy {
   destroy$: Subject<Boolean> = new Subject<Boolean>();
   subscriptions: Subscription[] = [];
 
-  constructor() {}
-
   /**
-   * registers subscription functions for auto cancelation
+   * Handles auto cancellation of given subscriptions
    */
-  watch(subscriptions: Subscription | Subscription[]) {
+  autoCancel(subscriptions: Subscription | Subscription[]) {
     if (Array.isArray(subscriptions)) {
       this.subscriptions = [...this.subscriptions, ...subscriptions];
     } else {
@@ -35,14 +31,7 @@ export class UnsubService implements OnDestroy {
   }
 
   /**
-   * @returns an operator function consumable to .pipe()
-   */
-  untilDestroy() {
-    return takeUntil(this.destroy$);
-  }
-
-  /**
-   * cancels all subscriptions on destroy
+   * Handles automatically cancelling all subscriptions on destroy
    */
   ngOnDestroy() {
     this.destroy$.next(true);

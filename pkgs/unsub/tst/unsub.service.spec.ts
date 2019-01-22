@@ -8,13 +8,12 @@
 
 import { TestBed, inject } from '@angular/core/testing';
 
-import { UnsubModule } from '../src/unsub.module';
 import { UnsubService } from '../src/unsub.service';
 
 describe('UnsubService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [UnsubModule],
+      imports: [],
       providers: [UnsubService]
     });
   });

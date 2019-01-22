@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { UnsubService, Unsubscribable } from 'pkgs/unsub';
-import { interval, Subject } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { tap, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -10,38 +10,36 @@ import { tap, takeUntil } from 'rxjs/operators';
   templateUrl: './home.component.html'
 })
 @Unsubscribable({
-  takeUntilSubscription: 'destroy$'
+  takeUntilInputName: 'destroy$'
 })
 export class HomeComponent implements OnDestroy {
   title = 'Neekware';
-  customSub$ = null;
-  customSub2$ = null;
+  customSub$: Subscription;
+  customSub2$: Subscription;
   destroy$: Subject<Boolean> = new Subject<Boolean>();
 
   constructor(private unsub: UnsubService) {
     console.log(`HomeComponent: loaded ...`);
     this.title = '@nwx/unsub';
 
-    this.customSub$ = interval(3000)
-      .pipe(tap(num => console.log(`customSub$ - ${num}`)))
+    this.customSub$ = interval(2000)
+      .pipe(tap(num => console.log(`HomeComponent - customSub$ - ${num}`)))
       .subscribe();
 
-    this.customSub2$ = interval(3000)
-      .pipe(tap(num => console.log(`customSub2$ - ${num}`)))
+    this.customSub2$ = interval(2000)
+      .pipe(tap(num => console.log(`HomeComponent - customSub2$ - ${num}`)))
       .subscribe();
 
-    interval(3000)
-      .pipe(takeUntil(this.destroy$), tap(num => console.log(`takeUntil - ${num}`)))
+    interval(2000)
+      .pipe(takeUntil(this.destroy$), tap(num => console.log(`HomeComponent - takeUntil - ${num}`)))
       .subscribe();
 
-    interval(3000)
-      .pipe(takeUntil(this.destroy$), tap(num => console.log(`takeUntil2 - ${num}`)))
+    interval(2000)
+      .pipe(takeUntil(this.destroy$), tap(num => console.log(`HomeComponent - takeUntil2 - ${num}`)))
       .subscribe();
-
-    // this.unsub.watch([this.customSub$]);
   }
 
   ngOnDestroy() {
-    console.log('HomeComponent ngOnDestroy called.');
+    console.log('HomeComponent ngOnDestroy ...');
   }
 }

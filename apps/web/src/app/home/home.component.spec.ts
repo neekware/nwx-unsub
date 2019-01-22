@@ -3,28 +3,26 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { Observable, of as observableOf } from 'rxjs';
 
-import { UnsubModule } from 'pkgs/unsub';
-
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserModule, UnsubModule],
+      imports: [BrowserModule],
       declarations: [HomeComponent]
     }).compileComponents();
   }));
 
   it('should create the @nwx/unsub', async(() => {
     const fixture = TestBed.createComponent(HomeComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    const home = fixture.debugElement.componentInstance;
+    expect(home).toBeTruthy();
   }));
 
   it(`should have as title '@nwx/unsub'`, async(() => {
     const fixture = TestBed.createComponent(HomeComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('@nwx/unsub');
+    const home = fixture.debugElement.componentInstance;
+    expect(home.title).toEqual('@nwx/unsub');
   }));
 
   it('should render title in a h1 tag', async(() => {

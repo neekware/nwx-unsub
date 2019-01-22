@@ -1,6 +1,6 @@
 # @nwx/unsub
 
-**A simple subscription clean up module for Angular applications**
+**A simple subscription clean library for Angular applications**
 
 [![status-image]][status-link]
 [![version-image]][version-link]
@@ -13,17 +13,144 @@
 
 # How to use
 
+**Auto Canceling Subscription via UnsubService**
+
 ```typescript
-import { Unsubscriber } from '@nwx/unsub';
+// in your component
+import { Component } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { UnsubService } from '@nwx/unsub';
 
+@Component({
+  selector: 'home',
+  providers: [UnsubService], // one copy of the service per component
+  templateUrl: './home.component.html'
+})
+export class HomeComponent { // no need to implement OnDestroy, unless needed for other clean ups
+  customSub$: Subscription;
 
+  constructor(private unsub: UnsubService) {
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+    this.unsub.autoCancel(this.customSub$); // we want this to be automatically cleaned up
+
+    interval(3000)
+      .pipe(takeUntil(this.unsub.destroy$) // this will be automatically completed and cleaned up
+      .subscribe(num => console.log(`takeUntil - ${num}`));
+  }
+}
+```
+
+**Auto Cancelling Subscription Decorator**
+
+```typescript
+// in your component
+import { Component } from '@angular/core';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscribable } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+@Unsubscribable()
+export class HomeComponent { // no need to implement OnDestroy, unless needed for other clean ups
+  customSub$: Subscription;
+  constructor() {
+    // decorated class will auto clean this up
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+  }
+}
+```
+
+# Advanced Usage
+
+**Auto Canceling Subscription Decorator (w/ takeUntil)**
+
+```typescript
+// in your component
+import { Component, Input } from '@angular/core';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscribable } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+@Unsubscribable({
+  takeUntilInputName: 'destory$', // property used by takeUntil() - destroy$ or any custom name
+})
+export class HomeComponent {
+  destroy$: Subject<Boolean> = new Subject<Boolean>(); // destroy$ or any custom name
+
+  constructor() {
+    interval(3000)
+      .pipe(takeUntil(this.destory$)) // decorated class will auto complete and clean this up
+      .subscribe(num => console.log(`takeUntil - ${num}`));
+  }
+}
+```
+
+**Auto Cancelling Subscription Decorator (w/ Includes)**
+
+```typescript
+// in your component
+import { Component, Input } from '@angular/core';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscribable } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+@Unsubscribable({
+  includes: ['customSub$'], // specific subscription names to be auto canceled
+})
+export class HomeComponent {
+  @Input() notOurSub$: Subscription; // not our sub to cancel, not included in auto cancel
+  customSub$: Subscription;
+
+  constructor() {
+    // decorated class auto clean this up
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+  }
+}
+```
+
+**Auto Cancelling Subscription Decorator (w/ Excludes)**
+
+```typescript
+// in your component
+import { Component, Input } from '@angular/core';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscribable } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+@Unsubscribable({
+  excludes: ['notOurSub$'] // subscription names not to be auto canceled
+})
+export class HomeComponent {
+  @Input() notOurSub$: Subscription; // not our sub to cancel, excluded from auto cancel
+  customSub$: Subscription;
+
+  constructor() {
+    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
+  }
+}
 ```
 
 # Running the tests
 
 To run the tests against the current environment:
 
-    npm run ci:all
+    npm run ci
 
 # License
 
@@ -46,8 +173,6 @@ X.Y.Z Version
 [download-image]: https://img.shields.io/npm/dm/@nwx/unsub.svg
 [download-link]: https://www.npmjs.com/package/@nwx/unsub
 
-
-Sponsors
-====================
+# Sponsors
 
 [![Surge](https://www.surgeforward.com/wp-content/themes/understrap-master/images/logo.png)](https://github.com/surgeforward)
