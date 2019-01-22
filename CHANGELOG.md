@@ -1,3 +1,15 @@
+## 0.0.5
+
+Features:
+
+  - Fix constructor bug
+
+## 0.0.4
+
+Features:
+
+  - Simplify
+
 ## 0.0.3
 
 Features:
