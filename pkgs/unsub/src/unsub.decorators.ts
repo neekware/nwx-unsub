@@ -18,7 +18,7 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
 export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
   options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
-    return class DecoratedClass extends target implements OnDestroy {
+    return class extends target implements OnDestroy {
       constructor(...args: any[]) {
         super(...arguments as any);
         if (
