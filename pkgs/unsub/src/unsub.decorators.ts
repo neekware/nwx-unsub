@@ -21,8 +21,9 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
     return class UnsubClass extends target implements OnDestroy {
       /**
        * Validates the options
+       * @returns void
        */
-      validateOptions() {
+      validateOptions(): void {
         if (
           options.takeUntilInputName &&
           !this.hasOwnProperty(options.takeUntilInputName)
@@ -37,8 +38,9 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
 
       /**
        * Cancels all subscriptions on destroy
+       * @returns void
        */
-      ngOnDestroy() {
+      ngOnDestroy(): void {
         this.validateOptions();
         this.processTakeUntils();
         if (options.includes.length > 0) {
@@ -53,8 +55,9 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
 
       /**
        * Cancels all subscriptions that use takeUntil
+       * @returns void
        */
-      processTakeUntils() {
+      processTakeUntils(): void {
         if (this.hasOwnProperty(options.takeUntilInputName)) {
           this[options.takeUntilInputName].next(true);
           this[options.takeUntilInputName].complete();
@@ -63,8 +66,9 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
 
       /**
        * Cancels only the subscriptions that are explicitly includes
+       * @returns void
        */
-      processIncludes() {
+      processIncludes(): void {
         options.includes.forEach(prop => {
           if (this.hasOwnProperty(prop)) {
             const subscription = this[prop];
@@ -83,8 +87,9 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
 
       /**
        * Cancels all auto-detected subscriptions except those that are explicitly excluded
+       * @returns void
        */
-      processExcludes() {
+      processExcludes(): void {
         options.excludes.push(options.takeUntilInputName);
         for (const prop in this) {
           if (this.hasOwnProperty(prop) && options.excludes.indexOf(prop) <= -1) {
