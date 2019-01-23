@@ -18,10 +18,9 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
 export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
   options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
-    return class extends target implements OnDestroy {
+    return class UnsubClass extends target implements OnDestroy {
       /**
-       * Validate the provided options
-       * Ensure the subject property name matches the `takeUntilInputName` provided.
+       * Validates the options
        */
       validateOptions() {
         if (
@@ -37,7 +36,7 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
       }
 
       /**
-       * Cancel all subscriptions on destroy
+       * Cancels all subscriptions on destroy
        */
       ngOnDestroy() {
         this.validateOptions();
@@ -53,7 +52,7 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
       }
 
       /**
-       * Cancel all subscriptions that use takeUntil
+       * Cancels all subscriptions that use takeUntil
        */
       processTakeUntils() {
         if (this.hasOwnProperty(options.takeUntilInputName)) {
@@ -63,7 +62,7 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
       }
 
       /**
-       * Cancel all subscriptions that are explicitly specified
+       * Cancels only the subscriptions that are explicitly includes
        */
       processIncludes() {
         options.includes.forEach(prop => {
@@ -83,7 +82,7 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
       }
 
       /**
-       * Cancel all subscriptions except those that are explicitly specified
+       * Cancels all auto-detected subscriptions except those that are explicitly excluded
        */
       processExcludes() {
         options.excludes.push(options.takeUntilInputName);
