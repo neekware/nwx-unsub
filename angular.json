@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/web",
+            "outputPath": "builds/apps/web",
             "index": "apps/web/src/index.html",
             "main": "apps/web/src/main.ts",
             "polyfills": "apps/web/src/polyfills.ts",

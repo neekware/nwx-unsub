@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 
 import { interval, Subject, Subscription } from 'rxjs';
 import { tap, takeUntil } from 'rxjs/operators';
-import { UnsubService, Unsubscribable } from 'pkgs/unsub';
+import { UnsubService, Unsubscribable } from '@nwx/unsub';
 
 @Component({
   selector: 'app-home',
