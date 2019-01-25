@@ -1,6 +1,12 @@
+## 0.0.6
+
+Bugfix:
+
+  - Fix ts config files & test infra
+
 ## 0.0.5
 
-Features:
+Bugfix:
 
   - Fix constructor bug
 
