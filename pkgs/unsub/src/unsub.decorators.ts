@@ -8,7 +8,7 @@
 
 import { OnDestroy } from '@angular/core';
 
-import { isFunction } from 'util';
+import { isFunction } from './unsub.utils';
 import { UnsubscribableOptions } from './unsub.types';
 import { DefaultUnsubscribableOptions } from './unsub.defaults';
 

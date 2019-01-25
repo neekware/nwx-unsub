@@ -8,7 +8,7 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { isFunction } from 'util';
+import { isFunction } from './unsub.utils';
 import { Subject, Subscription } from 'rxjs';
 
 /**

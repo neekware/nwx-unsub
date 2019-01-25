@@ -8,5 +8,6 @@
 
 export { UnsubscribableOptions } from './src/unsub.types';
 export { DefaultUnsubscribableOptions } from './src/unsub.defaults';
+export { isFunction } from './src/unsub.utils';
 export { Unsubscribable } from './src/unsub.decorators';
 export { UnsubService } from './src/unsub.service';
