@@ -53,12 +53,6 @@
             }
           }
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "web:build"
-          }
-        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -129,10 +123,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "pkgs/unsub/tsconfig.lib.json",
-              "pkgs/unsub/tsconfig.spec.json"
-            ],
+            "tsConfig": ["pkgs/unsub/tsconfig.lib.json", "pkgs/unsub/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**"]
           }
         }

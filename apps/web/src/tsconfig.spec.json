@@ -6,7 +6,7 @@
     "types": ["jasmine", "node"],
     "baseUrl": "./",
     "paths": {
-      "@nwx/unsub": ["../../../pkgs/unsub/index"]
+      "@nwx/unsub": ["../../../builds/nwx-unsub"]
     }
   },
   "files": ["test.ts", "polyfills.ts"],

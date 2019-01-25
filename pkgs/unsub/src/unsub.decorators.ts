@@ -15,7 +15,7 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
 /**
  * Unsubscribable decorator - streamline canceling of subscriptions
  */
-export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
+export function Unsubscribable(options = DefaultUnsubscribableOptions) {
   options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
     return class UnsubClass extends target implements OnDestroy {
@@ -106,4 +106,4 @@ export const Unsubscribable = (options = DefaultUnsubscribableOptions) => {
       }
     };
   };
-};
+}
