@@ -16,7 +16,7 @@ export class HomeComponent implements OnDestroy {
   title = 'Neekware';
   customSub$: Subscription;
   customSub2$: Subscription;
-  destroy$: Subject<Boolean> = new Subject<Boolean>();
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private unsub: UnsubService) {
     console.log(`HomeComponent: loaded ...`);

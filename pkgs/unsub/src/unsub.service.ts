@@ -16,7 +16,7 @@ import { Subject, Subscription } from 'rxjs';
  */
 @Injectable()
 export class UnsubService implements OnDestroy {
-  destroy$: Subject<Boolean> = new Subject<Boolean>();
+  destroy$: Subject<boolean> = new Subject<boolean>();
   subscriptions: Subscription[] = [];
 
   /**
