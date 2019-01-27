@@ -18,6 +18,12 @@ const mockSub1 = {
   }
 };
 
+const mockSub2 = {
+  unsubscribe: () => {
+    console.log('Sub2 cancelled');
+  }
+};
+
 describe('UnsubService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,22 +44,31 @@ describe('UnsubService', () => {
       expect(service.destroy$).toBeDefined();
       expect(service.subscriptions).toBeDefined();
       expect(service.autoUnsubscribe).toBeDefined();
-      expect(service.autoUnsubscribe).toBeDefined();
       expect(service.ngOnDestroy).toBeDefined();
     })
   );
 
   it(
-    'should have functional autoUnsubscribe',
+    'autoUnsubscribe() should accept subscriptions objects',
     inject([UnsubService], (service: UnsubService) => {
-      const sub$ = mockSub1;
-      service.autoUnsubscribe(<Subscription>sub$);
+      const sub1$ = mockSub1 as Subscription;
+      service.autoUnsubscribe(sub1$);
       expect(service.subscriptions.length).toBe(1);
     })
   );
 
   it(
-    'should complete destroy$ onDestroy',
+    'autoUnsubscribe() should accept a list of subscriptions',
+    inject([UnsubService], (service: UnsubService) => {
+      const sub1$ = mockSub1 as Subscription;
+      const sub2$ = mockSub2 as Subscription;
+      service.autoUnsubscribe([sub1$, sub2$]);
+      expect(service.subscriptions.length).toBe(2);
+    })
+  );
+
+  it(
+    'ngOnDestroy() should complete destroy$',
     inject([UnsubService], (service: UnsubService) => {
       const completeSpy = spyOn(service.destroy$, 'complete');
       service.ngOnDestroy();
@@ -62,14 +77,15 @@ describe('UnsubService', () => {
   );
 
   it(
-    'should have cancelled sub$ onDestroy',
+    'ngOnDestroy() should have cancelled subscriptions',
     inject([UnsubService], (service: UnsubService) => {
-      const sub$ = mockSub1;
-      service.autoUnsubscribe(<Subscription>sub$);
+      const sub1$ = mockSub1 as Subscription;
+      service.autoUnsubscribe(sub1$);
+      const sub2$ = mockSub1 as Subscription;
+      service.autoUnsubscribe(sub2$);
       const logSpy = spyOn(console, 'log');
       service.ngOnDestroy();
       expect(logSpy).toHaveBeenCalled();
     })
   );
-
 });

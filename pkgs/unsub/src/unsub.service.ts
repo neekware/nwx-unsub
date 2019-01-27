@@ -22,11 +22,11 @@ export class UnsubService implements OnDestroy {
   /**
    * Registers all subscriptions that need auto cancellation on destroy
    */
-  autoUnsubscribe(subscriptions: Subscription | Subscription[]) {
-    if (Array.isArray(subscriptions)) {
-      this.subscriptions = [...this.subscriptions, ...subscriptions];
+  autoUnsubscribe(subscription: Subscription | Subscription[]) {
+    if (Array.isArray(subscription)) {
+      this.subscriptions = [...this.subscriptions, ...subscription];
     } else {
-      this.subscriptions.push(subscriptions);
+      this.subscriptions.push(subscription);
     }
   }
 
