@@ -88,4 +88,15 @@ describe('UnsubService', () => {
       expect(logSpy).toHaveBeenCalled();
     })
   );
+
+  it(
+    'ngOnDestroy() should handle invalid subscriptions',
+    inject([UnsubService], (service: UnsubService) => {
+      const sub1$ = {} as Subscription;
+      service.autoUnsubscribe([sub1$]);
+      const logSpy = spyOn(console, 'log');
+      service.ngOnDestroy();
+      expect(logSpy).not.toHaveBeenCalled();
+    })
+  );
 });
