@@ -6,9 +6,9 @@
  * found in the LICENSE file at http://neekware.com/license/MIT.html
  */
 
-import { Unsubscribable } from '../src/unsub.decorators';
-import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Unsubscribable } from '../src/unsub.decorators';
 
 const mockSub1 = {
   unsubscribe: () => {
@@ -41,6 +41,20 @@ describe('@Unsubscribable', () => {
     const destroySpy = spyOn(<any>comp, 'ngOnDestroy');
     comp['ngOnDestroy']();
     expect(destroySpy).toHaveBeenCalled();
+  });
+
+  it('should call ngOnDestroy of super if exists', () => {
+    @Unsubscribable()
+    class UnsubComponent implements OnDestroy {
+      ngOnDestroy() {
+        console.log('ngOnDestroy of super called');
+      }
+    }
+
+    const comp = new UnsubComponent();
+    const logSpy = spyOn(console, 'log');
+    comp['ngOnDestroy']();
+    expect(logSpy).toHaveBeenCalled();
   });
 
   it('should throw on missing destroy$', () => {

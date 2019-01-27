@@ -1,3 +1,10 @@
+## 1.0.1
+
+Enhancements:
+
+  - Update peer dependencies
+  - Add more tests
+
 ## 1.0.0
 
 Release:
