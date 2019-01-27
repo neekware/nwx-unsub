@@ -32,7 +32,7 @@ export class HomeComponent { // no need to implement OnDestroy, unless needed fo
 
   constructor(private unsub: UnsubService) {
     this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
-    this.unsub.autoCancel(this.customSub$); // we want this to be automatically cleaned up
+    this.unsub.autoUnsubscribe(this.customSub$); // we want this to be automatically cleaned up
 
     interval(3000)
       .pipe(takeUntil(this.unsub.destroy$) // this will be automatically completed and cleaned up

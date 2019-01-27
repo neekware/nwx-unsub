@@ -26,7 +26,7 @@ export class LazyComponent implements OnDestroy {
       .pipe(takeUntil(this.unsub.destroy$))
       .subscribe(num => console.log(`LazyComponent - takeUntil - ${num}`));
 
-    this.unsub.autoCancel([this.customSub$]);
+    this.unsub.autoUnsubscribe([this.customSub$]);
   }
 
   ngOnDestroy() {

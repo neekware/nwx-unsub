@@ -22,7 +22,7 @@ export class UnsubService implements OnDestroy {
   /**
    * Registers all subscriptions that need auto cancellation on destroy
    */
-  autoCancel(subscriptions: Subscription | Subscription[]) {
+  autoUnsubscribe(subscriptions: Subscription | Subscription[]) {
     if (Array.isArray(subscriptions)) {
       this.subscriptions = [...this.subscriptions, ...subscriptions];
     } else {
