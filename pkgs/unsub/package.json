@@ -1,0 +1,8 @@
+{
+  "name": "@nwx/unsub",
+  "description": "A simple subscription clean up module for Angular applications",
+  "peerDependencies": {
+    "@angular/core": "^6.0.0",
+    "rxjs": "^6.0.0"
+  }
+}

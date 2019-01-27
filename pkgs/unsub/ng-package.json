@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../builds/nwx-unsub",
+  "lib": {
+    "flatModuleFile": "nwx-unsub",
+    "entryFile": "index.ts",
+    "umdModuleIds": {}
+  }
+}
