@@ -1,3 +1,9 @@
+## 1.0.0
+
+Release:
+
+  - Initial offical release
+
 ## 0.0.6
 
 Bugfix:
