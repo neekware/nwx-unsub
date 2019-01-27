@@ -31,7 +31,7 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
           throw Error(
             `${target.name} must implement "${
               options.takeUntilInputName
-            } = Subject<boolean> = new Subject<boolean>();" if decorated with @Unsubscribable`
+            } = new Subject<boolean>();" if decorated with @Unsubscribable`
           );
         }
       }
