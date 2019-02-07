@@ -15,7 +15,7 @@
 
 **UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
 
-**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`.
+**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`.  The decorated class must also implement `OnDestroy` even if unused.
 
 **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
 
@@ -34,7 +34,6 @@ import { UnsubService } from '@nwx/unsub';
   providers: [UnsubService],
   templateUrl: './home.component.html'
 })
-// OnDestroy is not required, unless other non-subscription clean up is required
 export class HomeComponent {
   customSub$: Subscription;
 
@@ -55,7 +54,7 @@ export class HomeComponent {
 
 ```typescript
 // in your component
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
 
@@ -64,14 +63,16 @@ import { Unsubscribable } from '@nwx/unsub';
   templateUrl: './home.component.html'
 })
 @Unsubscribable()
-// OnDestroy is not required, unless other non-subscription clean up is required
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   customSub$: Subscription;
 
   constructor() {
     // must keep a reference to our subscription for automatic cleanup
     this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
   }
+
+  // required even if unused. This is to prevent AOT tree shake ngOnDestroy of the decorated class
+  ngOnDestroy() {}
 }
 ```
 
@@ -81,7 +82,7 @@ export class HomeComponent {
 
 ```typescript
 // in your component
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unsubscribable } from '@nwx/unsub';
@@ -94,8 +95,7 @@ import { Unsubscribable } from '@nwx/unsub';
   // property used by takeUntil() - use destroy$ or any custom name
   takeUntilInputName: 'destory$',
 })
-// OnDestroy is not required, unless other non-subscription clean up is required
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   // This is used in takeUntil() - @Unsubscribable will manage it internally
   destroy$ = new Subject<boolean>();
 
@@ -105,6 +105,9 @@ export class HomeComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe(num => console.log(`takeUntil - ${num}`));
   }
+
+  // required even if unused. This is to prevent AOT tree shake ngOnDestroy of the decorated class
+  ngOnDestroy() {}
 }
 ```
 
@@ -112,7 +115,7 @@ export class HomeComponent {
 
 ```typescript
 // in your component
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unsubscribable } from '@nwx/unsub';
@@ -125,7 +128,7 @@ import { Unsubscribable } from '@nwx/unsub';
   // specific subscription names to be auto canceled, everything else is ignored
   includes: ['customSub$']
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   // this is not our subscription, so we don't include it for auto clean up
   @Input() notOurSub$: Subscription;
 
@@ -136,6 +139,9 @@ export class HomeComponent {
     // decorated class auto clean this up
     this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
   }
+
+  // required even if unused. This is to prevent AOT tree shake ngOnDestroy of the decorated class
+  ngOnDestroy() {}
 }
 ```
 
@@ -143,7 +149,7 @@ export class HomeComponent {
 
 ```typescript
 // in your component
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
 
@@ -155,7 +161,7 @@ import { Unsubscribable } from '@nwx/unsub';
   // subscription names not to be auto canceled, every other subscription will be clean up
   excludes: ['notOurSub$']
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   // this is not our subscription, so we exclude it from auto clean up
   @Input() notOurSub$: Subscription;
 
@@ -165,6 +171,9 @@ export class HomeComponent {
   constructor() {
     this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
   }
+
+  // required even if unused. This is to prevent AOT tree shake ngOnDestroy of the decorated class
+  ngOnDestroy() {}
 }
 ```
 
