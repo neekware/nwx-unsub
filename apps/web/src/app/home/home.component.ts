@@ -17,29 +17,36 @@ export class HomeComponent implements OnDestroy {
   customSub$: Subscription;
   customSub2$: Subscription;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  step = 5000;
 
   constructor(private unsub: UnsubService) {
     console.log(`HomeComponent: loaded ...`);
     this.title = '@nwx/unsub';
 
-    this.customSub$ = interval(2000)
+    this.customSub$ = interval(this.step)
       .pipe(tap(num => console.log(`HomeComponent - customSub$ - ${num}`)))
       .subscribe();
 
-    this.customSub2$ = interval(2000)
+    this.customSub2$ = interval(this.step)
       .pipe(tap(num => console.log(`HomeComponent - customSub2$ - ${num}`)))
       .subscribe();
 
-    interval(2000)
-      .pipe(takeUntil(this.destroy$), tap(num => console.log(`HomeComponent - takeUntil - ${num}`)))
+    interval(this.step)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(num => console.log(`HomeComponent - takeUntil - ${num}`))
+      )
       .subscribe();
 
-    interval(2000)
-      .pipe(takeUntil(this.destroy$), tap(num => console.log(`HomeComponent - takeUntil2 - ${num}`)))
+    interval(this.step)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(num => console.log(`HomeComponent - takeUntil2 - ${num}`))
+      )
       .subscribe();
   }
 
   ngOnDestroy() {
-    console.log('HomeComponent ngOnDestroy ...');
+    console.log('HomeComponent destroyed ...');
   }
 }

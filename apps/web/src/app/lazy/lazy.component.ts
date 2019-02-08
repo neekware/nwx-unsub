@@ -13,20 +13,21 @@ export class LazyComponent implements OnDestroy {
   title = 'Neekware Lazy';
   customSub$: Subscription;
   customSub2$: Subscription;
+  step = 5000;
 
   constructor(private unsub: UnsubService, private lzy: LazyService) {
     console.log(`LazyComponent: loaded ...`);
     this.title = '@nwx/unsub';
 
-    this.customSub$ = interval(2000).subscribe(num =>
+    this.customSub$ = interval(this.step).subscribe(num =>
       console.log(`LazyComponent - customSub$ - ${num}`)
     );
 
-    interval(2000)
+    interval(this.step)
       .pipe(takeUntil(this.unsub.destroy$))
       .subscribe(num => console.log(`LazyComponent - takeUntil - ${num}`));
 
-    this.customSub2$ = interval(2000).subscribe(num =>
+    this.customSub2$ = interval(this.step).subscribe(num =>
       console.log(`LazyComponent - customSub2$ - ${num}`)
     );
 
