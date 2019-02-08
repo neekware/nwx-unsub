@@ -1,48 +1,54 @@
+## 1.0.2
+
+Enhancements:
+
+* Error when OnDestroy is not implemented with @Unsubscribable
+
 ## 1.0.1
 
 Enhancements:
 
-  - Update peer dependencies
-  - Add more tests
+* Update peer dependencies
+* Add more tests
 
 ## 1.0.0
 
 Release:
 
-  - Initial offical release
+* Initial offical release
 
 ## 0.0.6
 
 Bugfix:
 
-  - Fix ts config files & test infra
+* Fix ts config files & test infra
 
 ## 0.0.5
 
 Bugfix:
 
-  - Fix constructor bug
+* Fix constructor bug
 
 ## 0.0.4
 
 Features:
 
-  - Simplify
+* Simplify
 
 ## 0.0.3
 
 Features:
 
-  - Clean compilation
+* Clean compilation
 
 ## 0.0.2
 
 Features:
 
-  - Add Decorator
+* Add Decorator
 
 ## 0.0.1
 
 Features:
 
-  - Initial Version
+* Initial Version
