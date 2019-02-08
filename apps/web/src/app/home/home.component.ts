@@ -12,7 +12,7 @@ import { UnsubService, Unsubscribable } from '@nwx/unsub';
 @Unsubscribable({
   takeUntilInputName: 'destroy$'
 })
-export class HomeComponent implements OnDestroy {
+export class HomeComponent {
   title = 'Neekware';
   customSub$: Subscription;
   customSub2$: Subscription;
@@ -46,7 +46,7 @@ export class HomeComponent implements OnDestroy {
       .subscribe();
   }
 
-  ngOnDestroy() {
-    console.log('HomeComponent destroyed ...');
-  }
+  // ngOnDestroy() {
+  //   console.log('HomeComponent destroyed ...');
+  // }
 }

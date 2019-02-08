@@ -18,21 +18,39 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
 export function Unsubscribable(options = DefaultUnsubscribableOptions) {
   return <T extends { new (...args: any[]): any }>(target: T) => {
     return class UnsubClass extends target implements OnDestroy {
-      options = { ...DefaultUnsubscribableOptions, ...options };
+      _options = { ...DefaultUnsubscribableOptions, ...options };
+
+      constructor(...args: any[]) {
+        super(arguments);
+        this._validateOptions();
+        this._validateOnDestroy();
+      }
 
       /**
-       * Validates the options
+       * Validates options
        * @returns void
        */
-      validateOptions(): void {
+      _validateOptions(): void {
         if (
-          this.options.takeUntilInputName &&
-          !this.hasOwnProperty(this.options.takeUntilInputName)
+          this._options.takeUntilInputName &&
+          !this.hasOwnProperty(this._options.takeUntilInputName)
         ) {
-          throw Error(
-            `${target.name} must implement "${
-              this.options.takeUntilInputName
-            } = new Subject<boolean>();" if decorated with @Unsubscribable`
+          console.error(
+            `Class must implement "${
+              this._options.takeUntilInputName
+            }: Subject<boolean> = new Subject<boolean>();" when decorated with @Unsubscribable`
+          );
+        }
+      }
+
+      /**
+       * Validates whether OnDestroy is implemented by super
+       * @returns void
+       */
+      _validateOnDestroy(): void {
+        if (!isFunction(super.ngOnDestroy)) {
+          console.error(
+            `Class must implement OnDestroy when decorated with @Unsubscribable`
           );
         }
       }
@@ -42,12 +60,11 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * @returns void
        */
       ngOnDestroy(): void {
-        this.validateOptions();
-        this.processTakeUntils();
-        if (this.options.includes.length > 0) {
-          this.processIncludes();
+        this._processTakeUntils();
+        if (this._options.includes.length > 0) {
+          this._processIncludes();
         } else {
-          this.processExcludes();
+          this._processExcludes();
         }
         super.ngOnDestroy();
       }
@@ -56,10 +73,10 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * Cancels all subscriptions that use takeUntil
        * @returns void
        */
-      processTakeUntils(): void {
-        if (this.hasOwnProperty(this.options.takeUntilInputName)) {
-          this[this.options.takeUntilInputName].next(true);
-          this[this.options.takeUntilInputName].complete();
+      _processTakeUntils(): void {
+        if (this.hasOwnProperty(this._options.takeUntilInputName)) {
+          this[this._options.takeUntilInputName].next(true);
+          this[this._options.takeUntilInputName].complete();
         }
       }
 
@@ -67,8 +84,8 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * Cancels only the subscriptions that are explicitly includes
        * @returns void
        */
-      processIncludes(): void {
-        this.options.includes.forEach(prop => {
+      _processIncludes(): void {
+        this._options.includes.forEach(prop => {
           if (this.hasOwnProperty(prop)) {
             const subscription = this[prop];
             if (
@@ -88,12 +105,12 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * Cancels all auto-detected subscriptions except those that are explicitly excluded
        * @returns void
        */
-      processExcludes(): void {
+      _processExcludes(): void {
         for (const prop in this) {
           if (
             this.hasOwnProperty(prop) &&
-            prop !== this.options.takeUntilInputName &&
-            this.options.excludes.indexOf(prop) <= -1
+            prop !== this._options.takeUntilInputName &&
+            this._options.excludes.indexOf(prop) <= -1
           ) {
             const subscription = this[prop];
             if (
