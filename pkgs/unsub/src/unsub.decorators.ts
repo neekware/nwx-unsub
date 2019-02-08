@@ -16,21 +16,22 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
  * Unsubscribable decorator - streamline canceling of subscriptions
  */
 export function Unsubscribable(options = DefaultUnsubscribableOptions) {
-  options = { ...DefaultUnsubscribableOptions, ...options };
   return <T extends { new (...args: any[]): any }>(target: T) => {
     return class UnsubClass extends target implements OnDestroy {
+      options = { ...DefaultUnsubscribableOptions, ...options };
+
       /**
        * Validates the options
        * @returns void
        */
       validateOptions(): void {
         if (
-          options.takeUntilInputName &&
-          !this.hasOwnProperty(options.takeUntilInputName)
+          this.options.takeUntilInputName &&
+          !this.hasOwnProperty(this.options.takeUntilInputName)
         ) {
           throw Error(
             `${target.name} must implement "${
-              options.takeUntilInputName
+              this.options.takeUntilInputName
             } = new Subject<boolean>();" if decorated with @Unsubscribable`
           );
         }
@@ -43,14 +44,12 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
       ngOnDestroy(): void {
         this.validateOptions();
         this.processTakeUntils();
-        if (options.includes.length > 0) {
+        if (this.options.includes.length > 0) {
           this.processIncludes();
         } else {
           this.processExcludes();
         }
-        if (super.ngOnDestroy && isFunction(super.ngOnDestroy)) {
-          super.ngOnDestroy();
-        }
+        super.ngOnDestroy();
       }
 
       /**
@@ -58,9 +57,9 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * @returns void
        */
       processTakeUntils(): void {
-        if (this.hasOwnProperty(options.takeUntilInputName)) {
-          this[options.takeUntilInputName].next(true);
-          this[options.takeUntilInputName].complete();
+        if (this.hasOwnProperty(this.options.takeUntilInputName)) {
+          this[this.options.takeUntilInputName].next(true);
+          this[this.options.takeUntilInputName].complete();
         }
       }
 
@@ -69,7 +68,7 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * @returns void
        */
       processIncludes(): void {
-        options.includes.forEach(prop => {
+        this.options.includes.forEach(prop => {
           if (this.hasOwnProperty(prop)) {
             const subscription = this[prop];
             if (
@@ -90,9 +89,12 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
        * @returns void
        */
       processExcludes(): void {
-        options.excludes.push(options.takeUntilInputName);
         for (const prop in this) {
-          if (this.hasOwnProperty(prop) && options.excludes.indexOf(prop) <= -1) {
+          if (
+            this.hasOwnProperty(prop) &&
+            prop !== this.options.takeUntilInputName &&
+            this.options.excludes.indexOf(prop) <= -1
+          ) {
             const subscription = this[prop];
             if (
               subscription &&
