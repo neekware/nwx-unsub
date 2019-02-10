@@ -16,12 +16,16 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
  * Unsubscribable decorator - streamline canceling of subscriptions
  */
 export function Unsubscribable(options = DefaultUnsubscribableOptions) {
-  return <T extends { new (...args: any[]): any }>(target: T) => {
-    return class UnsubClass extends target implements OnDestroy {
-      _options = { ...DefaultUnsubscribableOptions, ...options };
+  return function _Unsubscribable<T extends { new (...args: any[]): any }>(target: T) {
+    return class extends target implements OnDestroy {
+      _options = {
+        ...DefaultUnsubscribableOptions,
+        ...options,
+        className: target.name.length > 1 ? target.name : 'Class'
+      };
 
       constructor(...args: any[]) {
-        super(arguments);
+        super(...args);
         this._validateOptions();
         this._validateOnDestroy();
       }
@@ -36,7 +40,7 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
           !this.hasOwnProperty(this._options.takeUntilInputName)
         ) {
           console.error(
-            `Class must implement "${
+            `${this._options.className} must have "${
               this._options.takeUntilInputName
             }: Subject<boolean> = new Subject<boolean>();" when decorated with @Unsubscribable`
           );
@@ -50,7 +54,9 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
       _validateOnDestroy(): void {
         if (!isFunction(super.ngOnDestroy)) {
           console.error(
-            `Class must implement OnDestroy when decorated with @Unsubscribable`
+            `${
+              this._options.className
+            } must implement OnDestroy when decorated with @Unsubscribable`
           );
         }
       }
@@ -66,7 +72,15 @@ export function Unsubscribable(options = DefaultUnsubscribableOptions) {
         } else {
           this._processExcludes();
         }
-        super.ngOnDestroy();
+        if (isFunction(super.ngOnDestroy)) {
+          super.ngOnDestroy();
+        } else {
+          console.warn(
+            `${
+              this._options.className
+            } did not implement OnDestroy but was decorated with @Unsubscribable`
+          );
+        }
       }
 
       /**
