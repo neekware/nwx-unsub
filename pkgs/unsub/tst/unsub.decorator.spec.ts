@@ -23,84 +23,81 @@ const mockSub2 = {
 };
 
 describe('@Unsubscribable', () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    spyOn(console, 'error');
+    spyOn(console, 'log');
+    spyOn(console, 'warn');
+  });
 
   it('should implement OnDestroy', () => {
     @Unsubscribable()
-    class UnsubComponent {}
-
+    class UnsubComponent implements OnDestroy {
+      ngOnDestroy() {}
+    }
     const comp = new UnsubComponent();
     expect(typeof comp['ngOnDestroy']).toBe('function');
   });
 
-  it('should call ngOnDestroy', () => {
-    @Unsubscribable()
-    class UnsubComponent {}
-
+  it('should error on missing destroy$', () => {
+    @Unsubscribable({
+      takeUntilInputName: 'destroy$'
+    })
+    class UnsubComponent implements OnDestroy {
+      ngOnDestroy() {}
+    }
     const comp = new UnsubComponent();
-    const destroySpy = spyOn(<any>comp, 'ngOnDestroy');
     comp['ngOnDestroy']();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
   });
 
-  it('should call ngOnDestroy of super if exists', () => {
+  it('should not error if destroy$ exists', () => {
+    @Unsubscribable({
+      takeUntilInputName: 'destroy$'
+    })
+    class UnsubComponent implements OnDestroy {
+      destroy$: Subject<boolean> = new Subject<boolean>();
+      ngOnDestroy() {}
+    }
+    const comp = new UnsubComponent();
+    comp['ngOnDestroy']();
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it('should error on invalid takeUntilInputName', () => {
+    @Unsubscribable({
+      takeUntilInputName: 'foobar$'
+    })
+    class UnsubComponent implements OnDestroy {
+      destroy$: Subject<boolean> = new Subject<boolean>();
+      ngOnDestroy() {}
+    }
+    const comp = new UnsubComponent();
+    comp['ngOnDestroy']();
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should call ngOnDestroy of super', () => {
     @Unsubscribable()
     class UnsubComponent implements OnDestroy {
       ngOnDestroy() {
         console.log('ngOnDestroy of super called');
       }
     }
-
     const comp = new UnsubComponent();
-    const logSpy = spyOn(console, 'log');
     comp['ngOnDestroy']();
-    expect(logSpy).toHaveBeenCalled();
-  });
-
-  it('should throw on missing destroy$', () => {
-    @Unsubscribable({
-      takeUntilInputName: 'destroy$'
-    })
-    class UnsubComponent {}
-
-    const comp = new UnsubComponent();
-    expect(() => comp['validateOptions']()).toThrow();
-  });
-
-  it('should not throw for existing destroy$', () => {
-    @Unsubscribable({
-      takeUntilInputName: 'destroy$'
-    })
-    class UnsubComponent {
-      destroy$: Subject<boolean> = new Subject<boolean>();
-    }
-
-    const comp = new UnsubComponent();
-    expect(() => comp['validateOptions']()).not.toThrow();
-  });
-
-  it('should throw for invalid takeUntilInputName', () => {
-    @Unsubscribable({
-      takeUntilInputName: 'cleanup$'
-    })
-    class UnsubComponent {
-      destroy$: Subject<boolean> = new Subject<boolean>();
-    }
-
-    const comp = new UnsubComponent();
-    expect(() => comp['validateOptions']()).toThrow();
+    expect(console.log).toHaveBeenCalled();
   });
 
   it('should process destroy$ on ngOnDestroy', () => {
     @Unsubscribable({
       takeUntilInputName: 'destroy$'
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       destroy$: Subject<boolean> = new Subject<boolean>();
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const processTakeUntilsSpy = spyOn(<any>comp, 'processTakeUntils');
+    const processTakeUntilsSpy = spyOn(<any>comp, '_processTakeUntils');
     comp['ngOnDestroy']();
     expect(processTakeUntilsSpy).toHaveBeenCalled();
   });
@@ -109,10 +106,10 @@ describe('@Unsubscribable', () => {
     @Unsubscribable({
       takeUntilInputName: 'destroy$'
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       destroy$: Subject<boolean> = new Subject<boolean>();
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
     const completeSpy = spyOn(<any>comp.destroy$, 'complete');
     comp['ngOnDestroy']();
@@ -123,24 +120,24 @@ describe('@Unsubscribable', () => {
     @Unsubscribable({
       includes: ['foobar$']
     })
-    class UnsubComponent {}
-
+    class UnsubComponent implements OnDestroy {
+      ngOnDestroy() {}
+    }
     const comp = new UnsubComponent();
-    const logSpy = spyOn(console, 'warn');
     comp['ngOnDestroy']();
-    expect(logSpy).toHaveBeenCalled();
+    expect(console.warn).toHaveBeenCalled();
   });
 
   it('should process includes option', () => {
     @Unsubscribable({
       includes: ['sub1$']
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       sub1$ = mockSub1;
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const processIncludesSpy = spyOn(<any>comp, 'processIncludes');
+    const processIncludesSpy = spyOn(<any>comp, '_processIncludes');
     comp['ngOnDestroy']();
     expect(processIncludesSpy).toHaveBeenCalled();
   });
@@ -149,28 +146,27 @@ describe('@Unsubscribable', () => {
     @Unsubscribable({
       includes: ['sub1$']
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       sub1$ = mockSub1;
       sub2$ = mockSub2;
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const logSpy = spyOn(console, 'log');
     comp['ngOnDestroy']();
-    expect(logSpy).toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalled();
   });
 
   it('should process excluded option', () => {
     @Unsubscribable({
       excludes: ['sub2$']
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       sub1$ = mockSub1;
       sub2$ = mockSub2;
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const processExcludesSpy = spyOn(<any>comp, 'processExcludes');
+    const processExcludesSpy = spyOn(<any>comp, '_processExcludes');
     comp['ngOnDestroy']();
     expect(processExcludesSpy).toHaveBeenCalled();
   });
@@ -179,29 +175,27 @@ describe('@Unsubscribable', () => {
     @Unsubscribable({
       excludes: ['sub2$']
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       sub1$ = mockSub1;
       sub2$ = mockSub2;
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const logSpy = spyOn(console, 'log');
     comp['ngOnDestroy']();
-    expect(logSpy).toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalled();
   });
 
   it('should not cancel excluded subscriptions', () => {
     @Unsubscribable({
       excludes: ['sub2$']
     })
-    class UnsubComponent {
+    class UnsubComponent implements OnDestroy {
       sub1$ = mockSub1;
       sub2$ = mockSub2;
+      ngOnDestroy() {}
     }
-
     const comp = new UnsubComponent();
-    const logSpy = spyOn(console, 'warn');
     comp['ngOnDestroy']();
-    expect(logSpy).not.toHaveBeenCalled();
+    expect(console.warn).not.toHaveBeenCalled();
   });
 });
