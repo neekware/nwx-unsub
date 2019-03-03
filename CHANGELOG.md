@@ -1,8 +1,16 @@
+## 1.0.3
+
+Enhancements:
+
+* Throw Error when OnDestroy is not implemented with @Unsubscribable
+* Upgrade package.json
+* Add upgrade tools
+
 ## 1.0.2
 
 Enhancements:
 
-* Error when OnDestroy is not implemented with @Unsubscribable
+* Console.error when OnDestroy is not implemented with @Unsubscribable
 
 ## 1.0.1
 
