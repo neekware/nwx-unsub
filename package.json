@@ -37,7 +37,7 @@
     "ci:all": "yarn ci && yarn app:lint && yarn app:test:ci && yarn app:e2e:ci",
     "###----- Tools -----###": "Tool commands",
     "format": "node node_modules/.bin/prettier --single-quote --print-width 90 --write 'apps/**/src/*.{ts,css,scss,json}' 'pkgs/**/src/*.{ts,css,scss,json}'",
-    "release": "ts-node ./tools/release.ts -- ",
+    "release": "ts-node ./tools/release.ts ",
     "update": "ts-node tools/update.ts -m yarn"
   },
   "private": true,

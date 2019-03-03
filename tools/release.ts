@@ -51,7 +51,7 @@ async function syncPackageData() {
   modulePkg = { ...modulePkg, ...parentInfo };
   // flush new files to build dir of each package
   await writeFile(modulePkgPath, JSON.stringify(modulePkg, null, 2), () => {
-    console.error(`Flushed package.json  ...`);
+    console.log(`Flushed package.json  ...`);
   });
 
   await writeFileSync(
@@ -92,8 +92,6 @@ async function main() {
     return 1;
   }
 
-  await syncPackageData();
-
   let newVersion = porjPkgJson.version;
   let publishCmd = `yarn publish ${publishOptions} --new-version ${newVersion} --tag latest`;
   if (program.dev) {
@@ -102,6 +100,8 @@ async function main() {
   }
 
   if (program.publish) {
+    await syncPackageData();
+
     console.log('Publishing new version', newVersion);
     console.log(publishCmd);
     await execute(`cd ${moduleBuildPath} && ${publishCmd}`).catch(error => {
