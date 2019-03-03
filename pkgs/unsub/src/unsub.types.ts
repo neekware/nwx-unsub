@@ -14,4 +14,6 @@ export interface UnsubscribableOptions {
   includes?: string[];
   // name of subscription properties excluded from automatic canceling
   excludes?: string[];
+  // class name
+  className?: string;
 }
