@@ -15,9 +15,12 @@ import { DefaultUnsubscribableOptions } from './unsub.defaults';
  * Unsubscribable decorator - streamline canceling of subscriptions
  */
 export function Unsubscribable(options = DefaultUnsubscribableOptions) {
-  return function _Unsubscribable<T extends { new (...args: any[]): any }>(target: T) {
-    options = { ...DefaultUnsubscribableOptions, ...options };
-    target.name.length > 1 ? (options.className = target.name) : options.className;
+  return function _Unsubscribable<T extends new (...args: any[]) => any>(target: T) {
+    options = {
+      ...DefaultUnsubscribableOptions,
+      ...options,
+      className: target.name.length > 2 ? target.name : options.className
+    };
     if (!isFunction(target.prototype['ngOnDestroy'])) {
       throw new Error(
         `${
