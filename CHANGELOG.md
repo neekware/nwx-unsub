@@ -1,3 +1,8 @@
+## 1.0.4
+
+Enhancements:
+* Updated yarn.lock
+
 ## 1.0.3
 
 Enhancements:
