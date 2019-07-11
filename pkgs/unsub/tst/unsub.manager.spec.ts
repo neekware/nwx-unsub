@@ -1,8 +1,6 @@
-import { TestBed } from '@angular/core/testing';
-
 import { Subscription } from 'rxjs';
 
-import { UnsubService } from '../src/unsub.service';
+import { UnsubManager } from '../src/unsub.manager';
 
 const mockSub1 = {
   unsubscribe: () => {
@@ -17,60 +15,48 @@ const mockSub2 = {
 };
 
 describe('UnsubService', () => {
-  let service: UnsubService;
+  let unsubMgr: UnsubManager;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [],
-      providers: [UnsubService]
-    });
+    unsubMgr = new UnsubManager();
+  });
 
-    service = TestBed.get(UnsubService);
+  afterEach(() => {
+    unsubMgr = null;
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should have required props and methods', () => {
-    expect(service.destroy$).toBeDefined();
-    expect(service.ngOnDestroy).toBeDefined();
+    expect(unsubMgr).toBeTruthy();
   });
 
   it('autoUnsubscribe() should accept subscriptions objects', () => {
     const sub1$ = mockSub1 as Subscription;
-    service.track = sub1$;
-    expect(service['trackedSubs'].length).toBe(1);
+    unsubMgr.track = sub1$;
+    expect(unsubMgr['trackedSubs'].length).toBe(1);
   });
 
   it('autoUnsubscribe() should accept a list of subscriptions', () => {
     const sub1$ = mockSub1 as Subscription;
     const sub2$ = mockSub2 as Subscription;
-    service.track = [sub1$, sub2$];
-    expect(service['trackedSubs'].length).toBe(2);
-  });
-
-  it('ngOnDestroy() should complete destroy$', () => {
-    const completeSpy = spyOn(service.destroy$, 'complete');
-    service.ngOnDestroy();
-    expect(completeSpy).toHaveBeenCalled();
+    unsubMgr.track = [sub1$, sub2$];
+    expect(unsubMgr['trackedSubs'].length).toBe(2);
   });
 
   it('ngOnDestroy() should have cancelled subscriptions', () => {
     const sub1$ = mockSub1 as Subscription;
-    service.track = sub1$;
+    unsubMgr.track = sub1$;
     const sub2$ = mockSub1 as Subscription;
-    service.track = sub2$;
+    unsubMgr.track = sub2$;
     const logSpy = spyOn(console, 'log');
-    service.ngOnDestroy();
+    unsubMgr.unsubscribe();
     expect(logSpy).toHaveBeenCalled();
   });
 
   it('ngOnDestroy() should handle invalid subscriptions', () => {
     const sub1$ = {} as Subscription;
-    service.track = [sub1$];
+    unsubMgr.track = [sub1$];
     const logSpy = spyOn(console, 'log');
-    service.ngOnDestroy();
+    unsubMgr.unsubscribe();
     expect(logSpy).not.toHaveBeenCalled();
   });
 });
