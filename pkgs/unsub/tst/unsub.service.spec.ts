@@ -37,13 +37,13 @@ describe('UnsubService', () => {
     expect(service.ngOnDestroy).toBeDefined();
   });
 
-  it('autoUnsubscribe() should accept subscriptions objects', () => {
+  it('track should accept subscriptions objects', () => {
     const sub1$ = mockSub1 as Subscription;
     service.track = sub1$;
     expect(service['trackedSubs'].length).toBe(1);
   });
 
-  it('autoUnsubscribe() should accept a list of subscriptions', () => {
+  it('track should accept a list of subscriptions', () => {
     const sub1$ = mockSub1 as Subscription;
     const sub2$ = mockSub2 as Subscription;
     service.track = [sub1$, sub2$];

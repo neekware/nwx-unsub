@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 import { UnsubManager } from './unsub.manager';
 
@@ -8,6 +8,14 @@ import { UnsubManager } from './unsub.manager';
 @Injectable()
 export class UnsubService extends UnsubManager implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
+
+  /**
+   * Registers all subscriptions that need auto cancellation on destroy
+   * @deprecated Do Not Use!
+   */
+  autoUnsubscribe(subscription: Subscription | Subscription[]) {
+    this.track = subscription;
+  }
 
   /** Handles auto cancellation of all subscriptions on destroy */
   ngOnDestroy() {

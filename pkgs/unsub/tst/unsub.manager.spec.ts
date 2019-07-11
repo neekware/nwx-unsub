@@ -29,13 +29,13 @@ describe('UnsubService', () => {
     expect(unsubMgr).toBeTruthy();
   });
 
-  it('autoUnsubscribe() should accept subscriptions objects', () => {
+  it('track should accept subscriptions objects', () => {
     const sub1$ = mockSub1 as Subscription;
     unsubMgr.track = sub1$;
     expect(unsubMgr['trackedSubs'].length).toBe(1);
   });
 
-  it('autoUnsubscribe() should accept a list of subscriptions', () => {
+  it('track should accept a list of subscriptions', () => {
     const sub1$ = mockSub1 as Subscription;
     const sub2$ = mockSub2 as Subscription;
     unsubMgr.track = [sub1$, sub2$];
