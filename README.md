@@ -13,11 +13,11 @@
 
 # How to use
 
-**UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
+- **UnsubManager** is the simplest way to let a subscription manager simplify canceling of subscriptions. It works with `Component`, `Directive`, `Pipe` & `Injectable` provided that the user triggers the tracking and final unsubscribing.
 
-**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.
+- **UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
 
-**Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
+- **@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.  **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
 
 **Auto Canceling Subscription via UnsubManager Class**
 
