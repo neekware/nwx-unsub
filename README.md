@@ -13,16 +13,16 @@
 
 # How to use
 
-- **UnsubManager** is the simplest way to let a subscription manager simplify canceling of subscriptions. It works with `Component`, `Directive`, `Pipe` & `Injectable` provided that the user triggers the tracking and final unsubscribing.
+**UnsubManager** is the simplest way to let a subscription manager simplify canceling of subscriptions. It works with `Component`, `Directive`, `Pipe` & `Injectable` provided that the user triggers the tracking and the final unsubscribing.
 
-- **UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
+**UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
 
-- **@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.  **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
+**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.  **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
 
 **Auto Canceling Subscription via UnsubManager Class**
 
 ```typescript
-// in your component
+// in your component - Using UnsubManager
 import { Component } from '@angular/core';
 import { interval } from 'rxjs';
 import { UnsubManager } from '@nwx/unsub';
@@ -55,7 +55,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Canceling Subscription via UnsubService**
 
 ```typescript
-// in your component
+// in your component - Using UnsubService
 import { Component } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -91,7 +91,7 @@ export class HomeComponent {
 **Auto Canceling Subscription Decorator**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
@@ -119,7 +119,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Canceling Subscription Decorator (w/ takeUntil)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, OnDestroy } from '@angular/core';
 import { interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -152,7 +152,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Canceling Subscription Decorator (w/ Includes)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -186,7 +186,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Cancelling Subscription Decorator (w/ Excludes)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
