@@ -1,7 +1,12 @@
+## 2.0.1
+
+Enhancements:
+* Update readme
+
 ## 2.0.0
 
 Enhancements:
-* Add base class to UnsubService
+* Add base class for managing subscriptions
 
 ## 1.0.4
 

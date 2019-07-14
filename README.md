@@ -13,13 +13,19 @@
 
 # How to use
 
+There are three ways to track and cancel your subscriptions.
+
+1 - **Unsubcribe Manager**
+
+2 - **Unsubcribe Service**
+
+3 - **Unsubscribe Decorator**
+
+==================================================
+
+1 - **Auto Canceling Subscription via UnsubManager Class**
+
 **UnsubManager** is the simplest way to let a subscription manager simplify canceling of subscriptions. It works with `Component`, `Directive`, `Pipe` & `Injectable` provided that the user triggers the tracking and the final unsubscribing.
-
-**UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
-
-**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.  **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
-
-**Auto Canceling Subscription via UnsubManager Class**
 
 ```typescript
 // in your component - Using UnsubManager
@@ -32,9 +38,10 @@ import { UnsubManager } from '@nwx/unsub';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnDestroy {
+  // instantiate  a new subscribe manager
   unsubMgr: UnsubManager = new UnsubManager();
 
-  constructor(private unsub: UnsubService) {
+  constructor() {
     // track a single subscription
     this.unsubMgr.track = interval(1000).subscribe(num => console.log(`customSub1$ - ${num}`));
 
@@ -52,7 +59,9 @@ export class HomeComponent implements OnDestroy {
 }
 ```
 
-**Auto Canceling Subscription via UnsubService**
+2- **Auto Canceling Subscription via UnsubService**
+
+**UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
 
 ```typescript
 // in your component - Using UnsubService
@@ -88,7 +97,9 @@ export class HomeComponent {
 }
 ```
 
-**Auto Canceling Subscription Decorator**
+3 - **Auto Canceling Subscription Decorator**
+
+**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.
 
 ```typescript
 // in your component - Using Unsubscribable
