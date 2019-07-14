@@ -31,7 +31,7 @@ export class LazyComponent implements OnDestroy {
       console.log(`LazyComponent - customSub2$ - ${num}`)
     );
 
-    this.unsub.autoUnsubscribe([this.customSub$, this.customSub2$]);
+    this.unsub.track = [this.customSub$, this.customSub2$];
   }
 
   ngOnDestroy() {

@@ -13,16 +13,49 @@
 
 # How to use
 
+**UnsubManager** is the simplest way to let a subscription manager simplify canceling of subscriptions. It works with `Component`, `Directive`, `Pipe` & `Injectable` provided that the user triggers the tracking and the final unsubscribing.
+
 **UnsubService** is a great way to let another `ephemeral` service to handle the canceling of subscriptions. It works with classes of type `Component`, `Directive` & `Pipe`.
 
-**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`.  The decorated class must also implement `OnDestroy` even if unused.
+**@Unsubscribable()** is a great way to enhance a class to better handle the canceling of subscriptions. It works with classes of type `Component`, `Directive`, `Pipe` & `Injectable`. The decorated class must also implement `OnDestroy` even if unused.  **Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
 
-**Note:** Do not use `@Unsubscribable()` with `Injectable` services that set the `providedIn` option.
+**Auto Canceling Subscription via UnsubManager Class**
+
+```typescript
+// in your component - Using UnsubManager
+import { Component } from '@angular/core';
+import { interval } from 'rxjs';
+import { UnsubManager } from '@nwx/unsub';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+export class HomeComponent implements OnDestroy {
+  unsubMgr: UnsubManager = new UnsubManager();
+
+  constructor(private unsub: UnsubService) {
+    // track a single subscription
+    this.unsubMgr.track = interval(1000).subscribe(num => console.log(`customSub1$ - ${num}`));
+
+    // track a list of subscriptions
+    this.unsubMgr.track = [
+      interval(1000).subscribe(num => console.log(`customSub2$ - ${num}`)),
+      interval(1000).subscribe(num => console.log(`customSub3$ - ${num}`));
+    ]
+  }
+
+  ngOnDestroy() {
+    // unsubscribe all subscriptions
+    this.unsubMgr.unsubscribe();
+  }
+}
+```
 
 **Auto Canceling Subscription via UnsubService**
 
 ```typescript
-// in your component
+// in your component - Using UnsubService
 import { Component } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -37,10 +70,15 @@ import { UnsubService } from '@nwx/unsub';
 export class HomeComponent {
   customSub$: Subscription;
 
-  constructor(private unsub: UnsubService) {
-    this.customSub$ = interval(1000).subscribe(num => console.log(`customSub$ - ${num}`));
-    // register for automatic cleanup
-    this.unsub.autoUnsubscribe(this.customSub$);
+  constructor(private unsubService: UnsubService) {
+    // track a single subscription
+    this.unsubService.track = interval(1000).subscribe(num => console.log(`customSub1$ - ${num}`));
+
+    // track a list of subscriptions
+    this.unsubService.track = [
+      interval(1000).subscribe(num => console.log(`customSub2$ - ${num}`)),
+      interval(1000).subscribe(num => console.log(`customSub3$ - ${num}`));
+    ]
 
     // automatically gets cleaned up by UnsubService's OnDestroy
     interval(3000)
@@ -53,7 +91,7 @@ export class HomeComponent {
 **Auto Canceling Subscription Decorator**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
@@ -81,7 +119,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Canceling Subscription Decorator (w/ takeUntil)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, OnDestroy } from '@angular/core';
 import { interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -93,7 +131,7 @@ import { Unsubscribable } from '@nwx/unsub';
 })
 @Unsubscribable({
   // property used by takeUntil() - use destroy$ or any custom name
-  takeUntilInputName: 'destory$',
+  takeUntilInputName: 'destory$'
 })
 export class HomeComponent implements OnDestroy {
   // This is used in takeUntil() - @Unsubscribable will manage it internally
@@ -114,7 +152,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Canceling Subscription Decorator (w/ Includes)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -148,7 +186,7 @@ export class HomeComponent implements OnDestroy {
 **Auto Cancelling Subscription Decorator (w/ Excludes)**
 
 ```typescript
-// in your component
+// in your component - Using Unsubscribable
 import { Component, Input, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Unsubscribable } from '@nwx/unsub';
@@ -206,4 +244,4 @@ X.Y.Z Version
 
 # Sponsors
 
-[![Surge](https://www.surgeforward.com/wp-content/themes/understrap-master/images/logo.png)](https://github.com/surgeforward)
+[Surge](https://github.com/surgeforward)

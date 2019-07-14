@@ -1,3 +1,8 @@
+## 2.0.0
+
+Enhancements:
+* Add base class to UnsubService
+
 ## 1.0.4
 
 Enhancements:
