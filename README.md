@@ -2,6 +2,8 @@
 
 **A simple subscription clean library for Angular applications**
 
+# Library was deprecated in favor of [`@fullerstack/ngx-subify`](https://github.com/neekware/fullerstack/tree/main/libs/ngx-subify)
+
 [![status-image]][status-link]
 [![version-image]][version-link]
 [![coverage-image]][coverage-link]
@@ -255,4 +257,4 @@ X.Y.Z Version
 
 # Sponsors
 
-[Surge](https://github.com/surgeforward)
+[Neekware Inc.](https://github.com/neekware)
