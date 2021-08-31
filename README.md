@@ -1,8 +1,8 @@
+# Library was deprecated in favor of [`@fullerstack/ngx-subify`](https://github.com/neekware/fullerstack/tree/main/libs/ngx-subify)
+
 # @nwx/unsub
 
 **A simple subscription clean library for Angular applications**
-
-# Library was deprecated in favor of [`@fullerstack/ngx-subify`](https://github.com/neekware/fullerstack/tree/main/libs/ngx-subify)
 
 [![status-image]][status-link]
 [![version-image]][version-link]
